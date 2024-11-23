@@ -10,7 +10,7 @@ export function Profile() {
     const router = useRouter();
 
     const handleLogout = async () => {
-        await logoutAPI()
+        await logoutAPI(router)
 
         deleteAccess()
         deleteRefresh()

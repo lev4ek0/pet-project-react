@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { JWTPayload } from "@/types/auth/jwt";
+import { decrypt } from '@/app/lib/session';
 
 async function getCookiesStore() {
     return cookies()
@@ -18,8 +19,7 @@ export async function getAccess() {
 
 export async function getAccessPayload() {
     const accessToken = (await getAccess())?.value
-    const decrypt = (await import('@/app/lib/session')).decrypt
-    const payload: JWTPayload | undefined = await decrypt(accessToken)
+    const payload: JWTPayload | undefined = decrypt(accessToken)
 
     return payload
 }
@@ -31,8 +31,7 @@ export async function getRefresh() {
 
 export async function getRefreshPayload() {
     const refreshToken = (await getRefresh())?.value
-    const decrypt = (await import('@/app/lib/session')).decrypt
-    const payload = await decrypt(refreshToken)
+    const payload = decrypt(refreshToken)
 
     return payload
 }

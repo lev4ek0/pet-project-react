@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import { getAccess } from "@/utils/auth/client";
 
 export interface RequestOptions {
     path: string;
@@ -11,6 +11,7 @@ export default interface ApiResponse<T> {
     errors: string[];
     data: T | null;
     isOk: boolean;
+    statusCode: number;
 }
 
 
@@ -23,7 +24,7 @@ const MAP_ERRORS: Record<string, string> = {
 export async function apiRequest<T>(options: RequestOptions): Promise<ApiResponse<T>> {
     const { path, method, body, headers } = options
     const url = BASE_URL + path
-    const access = Cookies.get('access')
+    const access = getAccess()
 
     const requestOptions: RequestInit = {
         method,
@@ -48,15 +49,15 @@ export async function apiRequest<T>(options: RequestOptions): Promise<ApiRespons
                 (err: { code: string; message: string}) => MAP_ERRORS[err.code] || err.message || `Код ошибки: ${err.code}`
             )
 
-            return { errors, data: null, isOk: false };
+            return { errors, data: null, isOk: false, statusCode: response.status};
         }
 
-        return { errors: [], data: responseBody, isOk: true };
+        return { errors: [], data: responseBody, isOk: true, statusCode: response.status };
     } catch (error: unknown) {
         if (error instanceof Error) {
-            return { errors: [error.message], data: null, isOk: false };
+            return { errors: [error.message], data: null, isOk: false, statusCode: 500 };
         }
     
-        return { errors: ['Непредвиденная ошибка'], data: null, isOk: false };
+        return { errors: ['Непредвиденная ошибка'], data: null, isOk: false, statusCode: 500 };
     }
 }

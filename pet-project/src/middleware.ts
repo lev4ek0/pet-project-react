@@ -23,13 +23,12 @@ export async function middleware(request: NextRequest) {
 
     const payloadAccess = await getAccessPayload()
 
-    const timestamp = Date.now() / 1000
-    if (!pathname.startsWith("/login") && isExpiredToken(payloadAccess, timestamp)) {
+    if (!pathname.startsWith("/login") && isExpiredToken(payloadAccess)) {
 
         const refresh = (await getRefresh())?.value
-        const payloadRefresh = await decrypt(refresh)
+        const payloadRefresh = decrypt(refresh)
 
-        if (!refresh || !payloadRefresh || isExpiredToken(payloadRefresh, timestamp)) {
+        if (!refresh || !payloadRefresh || isExpiredToken(payloadRefresh)) {
             await deleteAccess()
             await deleteRefresh()
             return NextResponse.redirect(new URL('/login', request.url))
@@ -40,6 +39,8 @@ export async function middleware(request: NextRequest) {
         const { data } = await refreshAPI(body)
 
         if (!data) {
+            await deleteAccess()
+            await deleteRefresh()
             return NextResponse.redirect(new URL('/login', request.url))
         }
 
@@ -50,7 +51,7 @@ export async function middleware(request: NextRequest) {
 
     }
 
-    if (pathname.startsWith("/login") && !isExpiredToken(payloadAccess, timestamp)) {
+    if (pathname.startsWith("/login") && !isExpiredToken(payloadAccess)) {
         return NextResponse.redirect(new URL('/profile', request.url))
     }
 
