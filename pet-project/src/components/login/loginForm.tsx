@@ -5,7 +5,12 @@ import { AuthContext } from "@/context/auth";
 import { useRouter } from "next/navigation";
 import { setAccess, setRefresh } from "@/utils/auth/client";
 import loginAPI from "@/api/auth/login";
-import LoginButton from "./loginButton";
+import { Button } from "@/components/ui/button"
+import {
+    Card, CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
 
 export default function LoginForm() {
     const authContext = useContext(AuthContext);
@@ -30,16 +35,23 @@ export default function LoginForm() {
 
         setAccess(data.access_token)
         setRefresh(data.refresh_token)
-        router.replace('/profile');
+        router.replace('/');
     };
 
     return (
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form onSubmit={handleSubmit} action="#" method="POST" className="space-y-6">
-                <UsernameInput />
-                <PasswordInput />
-                <LoginButton />
-            </form>
-        </div>
+        <Card className="mx-auto max-w-sm min-w-96">
+            <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl font-bold">Войдите в аккаунт</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                    <form onSubmit={handleSubmit} action="#" method="POST" className="space-y-6">
+                        <UsernameInput />
+                        <PasswordInput />
+                        <Button full>Войти</Button>
+                    </form>
+                </div>
+            </CardContent>
+        </Card>
     )
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import { PasswordForm } from "./passwordForm"
-import { ProfileForm } from "./profileForm"
+import React from 'react';
+
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -10,8 +10,8 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
+export function Settings() {
 
-export function Profile() {
     return (
         <>
             <div className="container mx-auto py-5">
@@ -22,17 +22,11 @@ export function Profile() {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/profile">Профиль</BreadcrumbLink>
+                            <BreadcrumbLink href="/settings">Настройки</BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
-
-                <h1 className="text-3xl font-bold mb-6">Настройки профиля</h1>
-                <div className="space-y-6">
-                    <ProfileForm />
-                    <PasswordForm />
-                </div>
             </div>
         </>
-    )
+    );
 }

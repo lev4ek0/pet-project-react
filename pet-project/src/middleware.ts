@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
         await setAccess(data.access_token)
         await setRefresh(data.refresh_token)
 
-        return NextResponse.redirect(new URL('/profile', request.url))
+        return NextResponse.next()
 
     }
 
