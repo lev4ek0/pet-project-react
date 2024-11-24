@@ -15,7 +15,8 @@ export function ResetPageWithSearchParams() {
 
 export function Reset() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        // TODO: skeletons
+        <Suspense fallback={<div></div>}>
             <ResetPageWithSearchParams />
         </Suspense>
     );

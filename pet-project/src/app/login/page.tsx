@@ -36,7 +36,8 @@ function LoginPageWithSearchParams() {
 
 export default function Page() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        // TODO: skeletons
+        <Suspense fallback={<div></div>}>
             <LoginPageWithSearchParams />
         </Suspense>
     );

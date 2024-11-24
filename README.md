@@ -1,2 +1,2 @@
-- cp ./pet-project/.env.local ./pet-project/.env
+- cp ./pet-project/.env.example ./pet-project/.env
 - make build

@@ -7,6 +7,8 @@ import refreshAPI from './api/auth/refresh';
 import { deleteAccess, deleteRefresh, getAccessPayload, getRefresh, setAccess, setRefresh } from './utils/auth/server';
 import { isExpiredToken } from './utils/auth/common';
 import verifyAPI from './api/auth/verify';
+import { loginVkAPI } from './api/auth/oauth2/vk';
+import { loginGoogleAPI } from './api/auth/oauth2/google';
 
 const PUBLIC_FILE = /\.(.*)$/;
 const PUBLIC_PREFIXES = ["/login", "/register", "/auth"]
@@ -24,6 +26,49 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
 
     const payloadAccess = await getAccessPayload()
+
+    if (pathname.startsWith("/auth/oauth2/vk")) {
+        const deviceId = searchParams.get('device_id');
+        const code = searchParams.get('code');
+        const state = searchParams.get('state');
+        let url = '/login'
+
+        const { data, errors } = await loginVkAPI({device_id: deviceId || "", code: code || "", state: state || ""})
+        if (data) {
+            setAccess(data?.access_token)
+            setRefresh(data?.refresh_token)
+        }
+        if (errors && errors.length > 0) {
+            const errorParams = errors.map((error, index) => 
+                `error${index}=${encodeURIComponent(error)}`
+            ).join('&');
+    
+            url += `?${errorParams}`;
+        }
+
+        return NextResponse.redirect(new URL(url, request.url))
+    }
+
+    if (pathname.startsWith("/auth/oauth2/google")) {
+        const code = searchParams.get('code');
+        const state = searchParams.get('state');
+        let url = '/login'
+
+        const { data, errors } = await loginGoogleAPI({code: code || "", state: state || ""})
+        if (data) {
+            setAccess(data?.access_token)
+            setRefresh(data?.refresh_token)
+        }
+        if (errors && errors.length > 0) {
+            const errorParams = errors.map((error, index) => 
+                `error${index}=${encodeURIComponent(error)}`
+            ).join('&');
+    
+            url += `?${errorParams}`;
+        }
+
+        return NextResponse.redirect(new URL(url, request.url))
+    }
 
     if (pathname.startsWith("/auth/verify")) {
         const token = searchParams.get('token');
