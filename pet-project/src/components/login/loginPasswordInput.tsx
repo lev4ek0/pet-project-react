@@ -1,10 +1,11 @@
-import { AuthContext } from "@/context/auth";
-import { useContext } from "react";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuthStore } from "@/providers/authProvider";
 
 export default function PasswordInput() {
-    const authContext = useContext(AuthContext);
+    const { setLoginPassword, loginPassword } = useAuthStore(
+        (state) => state,
+      )
 
     return (
         <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -16,7 +17,7 @@ export default function PasswordInput() {
                     </a>
                 </div>
             </div>
-            <Input onChange={(e) => authContext?.setPassword(e.target.value)} type="password" placeholder="Пароль" autoComplete="password" required />
+            <Input onChange={(e) => setLoginPassword(e.target.value)} value={loginPassword} type="password" placeholder="Пароль" autoComplete="password" required />
         </div>
     )
 }

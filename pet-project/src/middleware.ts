@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
     const payloadAccess = await getAccessPayload()
 
-    if (!pathname.startsWith("/login") && isExpiredToken(payloadAccess)) {
+    if (!pathname.startsWith("/login") && !pathname.startsWith("/register") && isExpiredToken(payloadAccess)) {
 
         const refresh = (await getRefresh())?.value
         const payloadRefresh = decrypt(refresh)
@@ -51,8 +51,8 @@ export async function middleware(request: NextRequest) {
 
     }
 
-    if (pathname.startsWith("/login") && !isExpiredToken(payloadAccess)) {
-        return NextResponse.redirect(new URL('/profile', request.url))
+    if ((pathname.startsWith("/login") || pathname.startsWith("/register")) && !isExpiredToken(payloadAccess)) {
+        return NextResponse.redirect(new URL('/', request.url))
     }
 
     return NextResponse.next()

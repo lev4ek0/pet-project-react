@@ -1,7 +1,5 @@
-import { useContext } from "react";
 import PasswordInput from "./loginPasswordInput";
 import UsernameInput from "./loginUsernameInput";
-import { AuthContext } from "@/context/auth";
 import { useRouter } from "next/navigation";
 import { setAccess, setRefresh } from "@/utils/auth/client";
 import loginAPI from "@/api/auth/login";
@@ -11,32 +9,42 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { useAuthStore } from "@/providers/authProvider";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 export default function LoginForm() {
-    const authContext = useContext(AuthContext);
+    const { loginName, loginPassword, reset } = useAuthStore(
+        (state) => state,
+    )
+    const { addAlerts } = useAlertStore(
+        (state) => state,
+    )
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('username', authContext?.username || "");
-        formData.append('password', authContext?.password || "");
+        formData.append('username', loginName);
+        formData.append('password', loginPassword);
 
         const { errors, data, isOk } = await loginAPI(formData)
 
         if (!isOk || !data) {
-            authContext?.setErrors(errors);
-            setTimeout(() => {
-                authContext?.setErrors([]);
-            }, 5000);
+            addAlerts(errors)
             return
         }
 
         setAccess(data.access_token)
         setRefresh(data.refresh_token)
         router.replace('/');
+        reset()
     };
+
+    const handleRegisterClick = () => {
+        router.push('/register');
+    };
+
 
     return (
         <Card className="mx-auto max-w-sm min-w-96">
@@ -49,6 +57,7 @@ export default function LoginForm() {
                         <UsernameInput />
                         <PasswordInput />
                         <Button full>Войти</Button>
+                        <Button type="button" variant="secondary" full onClick={handleRegisterClick}>Зарегистрироваться</Button>
                     </form>
                 </div>
             </CardContent>

@@ -16,25 +16,23 @@ import { useRouter } from "next/navigation";
 import logoutAPI from "@/api/auth/logout";
 import { deleteAccess, deleteRefresh } from "@/utils/auth/client";
 import meAPI from "@/api/profile/me";
-import { useEffect, useState } from "react";
+import { useQuery } from '@tanstack/react-query'
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function Home() {
     const router = useRouter();
 
-    const [avatar, setAvatar] = useState('')
+    const { data, status } = useQuery({ queryKey: ['me'], queryFn: async () => meAPI(router) })
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const { data } = await meAPI(router)
+    let avatar: JSX.Element = <Skeleton className="h-10 w-10 rounded-full" />
 
-            if (data) {
-                setAvatar(data.avatar_url)
-            }
-        };
-
-        fetchData();
-    }, [router]);
+    if (data && status === 'success') {
+        avatar = <Avatar>
+            <AvatarImage src={data.data?.avatar_url} />
+            <AvatarFallback></AvatarFallback>
+        </Avatar>
+    }
 
     const handleLogout = async () => {
         await logoutAPI(router)
@@ -51,10 +49,7 @@ export default function Home() {
             <div className="absolute top-8 right-8">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Avatar>
-                            <AvatarImage src={avatar} />
-                            <AvatarFallback></AvatarFallback>
-                        </Avatar>
+                        {avatar}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
