@@ -7,5 +7,6 @@ export interface MeAPIResponseBody {
 }
 
 export interface MeAPIRequestBody {
-    nickname: string
+    nickname?: string,
+    email?: string,
 }

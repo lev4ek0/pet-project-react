@@ -1,7 +1,12 @@
 'use client'
 
+import { ProfileStoreProvider } from "@/providers/profileProvider";
 import { Profile } from "./profile";
 
 export default function Page() {
-    return <Profile />
+    return <>
+        <ProfileStoreProvider>
+            <Profile />
+        </ProfileStoreProvider>
+    </>
 }

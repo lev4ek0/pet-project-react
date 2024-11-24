@@ -10,14 +10,23 @@ import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useEffect, useState } from "react"
+import { MeAPIRequestBody } from "@/types/profile/me"
+import { useProfileStore } from "@/providers/profileProvider"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export function ProfileForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [initialName, setInitialName] = useState('');
+    const [initialEmail, setInitialEmail] = useState('');
     const [inputAvatar, setInputAvatar] = useState(<Skeleton className="h-20 w-20 rounded-full" />);
     const [inputUsername, setInputUsername] = useState(<Skeleton className="h-9 w-full" />);
     const [inputEmail, setInputEmail] = useState(<Skeleton className="h-9 w-full" />);
+    const [newEmailWarning, setNewEmailWarning] = useState(<></>)
+    const { newEmail, setNewEmail } = useProfileStore(
+        (state) => state,
+    )
 
     const router = useRouter();
 
@@ -31,6 +40,8 @@ export function ProfileForm() {
             setAvatar(me.data.data?.avatar_url || '');
             setName(me.data.data?.nickname || '');
             setEmail(me.data.data?.email || '');
+            setInitialName(me.data.data?.nickname || '');
+            setInitialEmail(me.data.data?.email || '');
         }
     }, [me.data, me.status]);
 
@@ -58,13 +69,44 @@ export function ProfileForm() {
                 onChange={(e) => setEmail(e.target.value)}
             />
         );
-    }, [name, email, avatar]);
+
+        if (newEmail && newEmail === email) {
+            setNewEmail(undefined)
+            setNewEmailWarning(<></>)
+        }
+
+        if (newEmail && newEmail !== email) {
+            setNewEmailWarning(
+                <Alert variant="warn">
+                    <AlertTitle>Подтвердите почту!</AlertTitle>
+                    <AlertDescription>
+                        На почту {newEmail} отправлено письмо для подтверждения
+                    </AlertDescription>
+                </Alert>
+            )
+        }
+    }, [name, email, avatar, newEmail, setNewEmail]);
 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        await meAPIPatch({ nickname: name }, router)
-        console.log('Profile updated:', { name, email })
+        const updatedFields: MeAPIRequestBody = {};
+        if (name !== initialName) updatedFields.nickname = name;
+        if (email !== initialEmail) updatedFields.email = email;
+
+        console.log(updatedFields)
+        console.log(Object.keys(updatedFields).length)
+        if (Object.keys(updatedFields).length > 0) {
+            const response = await meAPIPatch(updatedFields, router)
+            if (response.data && updatedFields.email) {
+                setNewEmail(updatedFields.email)
+            }
+            if (response.data) {
+                setInitialEmail(response.data.email)
+                setEmail(response.data.email)
+                setInitialName(response.data.nickname)
+            }
+        }
     }
 
     return (
@@ -84,6 +126,7 @@ export function ProfileForm() {
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="email">Почта</Label>
+                        {newEmailWarning}
                         {inputEmail}
                     </div>
                     <Button type="submit" full>Сохранить изменения</Button>

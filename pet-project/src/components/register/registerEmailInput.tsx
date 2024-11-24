@@ -10,7 +10,7 @@ export default function EmailInput() {
     return (
         <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="email">Почта</Label>
-            <Input id="email" onChange={(e) => setRegisterEmail(e.target.value)} value={registerEmail} type="email" placeholder="Логин" required />
+            <Input id="email" onChange={(e) => setRegisterEmail(e.target.value)} value={registerEmail} type="email" placeholder="Почта" required />
         </div>
     )
 }

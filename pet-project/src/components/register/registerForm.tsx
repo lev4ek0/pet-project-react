@@ -1,8 +1,6 @@
     import PasswordInput from "./registerPasswordInput";
     import EmailInput from "./registerEmailInput";
     import { useRouter } from "next/navigation";
-    import { setAccess, setRefresh } from "@/utils/auth/client";
-    import loginAPI from "@/api/auth/login";
     import { Button } from "@/components/ui/button"
     import {
         Card, CardContent,
@@ -12,9 +10,10 @@
     import { useAuthStore } from "@/providers/authProvider";
     import RePasswordInput from "./registerRePasswordInput";
     import { useAlertStore } from "@/providers/alertsProvider";
+import registerAPI from "@/api/auth/register";
 
     export default function RegisterForm() {
-        const { registerEmail, registerPassword } = useAuthStore(
+        const { registerEmail, registerPassword, registerRePassword } = useAuthStore(
             (state) => state,
         )
         const { addAlerts } = useAlertStore(
@@ -25,19 +24,19 @@
         const handleSubmit = async (event: React.FormEvent) => {
             event.preventDefault();
 
-            const formData = new FormData();
-            formData.append('username', registerEmail);
-            formData.append('password', registerPassword);
+            const body = {
+                email: registerEmail,
+                password: registerPassword,
+                re_password: registerRePassword,
+            }
+            
+            const { errors, isOk } = await registerAPI(body)
 
-            const { errors, data, isOk } = await loginAPI(formData)
-
-            if (!isOk || !data) {
+            if (!isOk) {
                 addAlerts(errors)
                 return
             }
 
-            setAccess(data.access_token)
-            setRefresh(data.refresh_token)
             router.replace('/');
         };
 

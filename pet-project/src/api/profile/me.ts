@@ -13,8 +13,20 @@ export default async function meAPI(router: AppRouterInstance) {
     return await privateAPIRequest<MeAPIResponseBody>(requestOptions, router)
 }
 
+function createRequestBody(updatedFields: Partial<MeAPIRequestBody>): string {
+    const body: Partial<MeAPIRequestBody> = {};
+
+    for (const key in updatedFields) {
+        if (updatedFields[key as keyof MeAPIRequestBody] !== undefined) {
+            body[key as keyof MeAPIRequestBody] = updatedFields[key as keyof MeAPIRequestBody];
+        }
+    }
+
+    return JSON.stringify(body);
+}
+
 export async function meAPIPatch(body: MeAPIRequestBody, router: AppRouterInstance) {
-    const bodyString = JSON.stringify(body)
+    const bodyString = createRequestBody(body)
 
     const requestOptions: RequestOptions = {
         path: "/auth/me",
