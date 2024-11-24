@@ -9,6 +9,7 @@ import { isExpiredToken } from './utils/auth/common';
 import verifyAPI from './api/auth/verify';
 
 const PUBLIC_FILE = /\.(.*)$/;
+const PUBLIC_PREFIXES = ["/login", "/register", "/auth"]
 
 
 export async function middleware(request: NextRequest) {
@@ -46,7 +47,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(url, request.url))
     }
 
-    if (!pathname.startsWith("/login") && !pathname.startsWith("/register") && isExpiredToken(payloadAccess)) {
+    const isNotPublicPath = !PUBLIC_PREFIXES.some(prefix => pathname.startsWith(prefix));
+
+    if (isNotPublicPath && isExpiredToken(payloadAccess)) {
 
         const refresh = (await getRefresh())?.value
         const payloadRefresh = decrypt(refresh)
@@ -74,7 +77,7 @@ export async function middleware(request: NextRequest) {
 
     }
 
-    if ((pathname.startsWith("/login") || pathname.startsWith("/register")) && !isExpiredToken(payloadAccess)) {
+    if (!isNotPublicPath && !isExpiredToken(payloadAccess)) {
         return NextResponse.redirect(new URL('/', request.url))
     }
 

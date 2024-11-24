@@ -12,7 +12,7 @@ export default function PasswordInput() {
             <div className="flex items-center justify-between">
                 <Label htmlFor="password">Пароль</Label>
                 <div className="text-sm">
-                    <a href="#" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    <a href="/auth/forgot" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Забыли пароль?
                     </a>
                 </div>
