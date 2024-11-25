@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { meAPIPatch } from "@/api/profile/me";
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/providers/alertsProvider";
+import { useToast } from "@/hooks/use-toast";
 
 export function PasswordForm() {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -15,6 +16,7 @@ export function PasswordForm() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const router = useRouter();
     const { addAlerts } = useAlertStore((state) => state);
+    const { toast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,6 +35,9 @@ export function PasswordForm() {
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
+            toast({
+                title: "Изменения успешно сохранены",
+            });
         }
     };
 
@@ -72,7 +77,13 @@ export function PasswordForm() {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>
-                    <Button type="submit" full>
+                    <Button
+                        disabled={
+                            !currentPassword || !newPassword || !confirmPassword
+                        }
+                        type="submit"
+                        full
+                    >
                         Изменить пароль
                     </Button>
                 </form>

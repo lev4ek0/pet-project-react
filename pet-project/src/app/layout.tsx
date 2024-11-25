@@ -4,6 +4,7 @@ import { ReactQueryProvider } from "./providers";
 import { AuthStoreProvider } from "@/providers/authProvider";
 import { AlertStoreProvider } from "@/providers/alertsProvider";
 import ErrorAlerts from "@/components/alerts";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
     title: "Адаптация",
@@ -23,6 +24,7 @@ export default function RootLayout({
                         <AlertStoreProvider>
                             <AuthStoreProvider>
                                 <ErrorAlerts />
+                                <Toaster />
                                 {children}
                             </AuthStoreProvider>
                         </AlertStoreProvider>

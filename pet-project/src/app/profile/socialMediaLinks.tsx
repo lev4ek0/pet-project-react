@@ -42,7 +42,6 @@ export function SocialMediaLinks() {
         let isOk = true;
         if (network === "vk") {
             const response = await vkUnlinkAPI(router);
-            console.log(response);
             isOk = response.isOk;
         } else {
             const response = await googleUnlinkAPI(router);
@@ -50,7 +49,6 @@ export function SocialMediaLinks() {
         }
 
         if (isOk) {
-            console.log(223);
             queryClient.invalidateQueries({ queryKey: ["me"] });
         }
     }

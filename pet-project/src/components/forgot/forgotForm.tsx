@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAlertStore } from "@/providers/alertsProvider";
 import { useAuthStore } from "@/providers/authProvider";
-import { useRouter } from "next/navigation";
 import EmailInput from "./forgotEmailInput";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export function ForgotForm() {
     const { forgotEmail } = useAuthStore((state) => state);
     const { addAlerts } = useAlertStore((state) => state);
     const router = useRouter();
+    const { toast } = useToast();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -27,6 +29,9 @@ export function ForgotForm() {
             return;
         }
 
+        toast({
+            title: "Письмо с ссылкой для подтверждения отправлено на почту",
+        });
         router.replace("/");
     };
 

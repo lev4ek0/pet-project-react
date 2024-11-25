@@ -48,8 +48,8 @@ export default function LoginForm() {
 
         setAccess(data.access_token);
         setRefresh(data.refresh_token);
-        router.replace("/");
         reset();
+        router.replace("/");
     };
 
     const handleRegisterClick = () => {

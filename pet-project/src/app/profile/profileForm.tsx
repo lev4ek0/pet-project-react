@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { MeAPIRequestBody } from "@/types/profile/me";
 import { useProfileStore } from "@/providers/profileProvider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProfileFormProps {
     isLoading: boolean;
@@ -35,8 +37,9 @@ export function ProfileForm({
     const { newEmail, updatedAt, setNewEmail } = useProfileStore(
         (state) => state,
     );
-
+    const { toast } = useToast();
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const newEmailWarning = (
         <Alert variant="warn">
@@ -107,8 +110,10 @@ export function ProfileForm({
                 setNewEmail(updatedFields.email);
             }
             if (response.data) {
-                setEmail(response.data.email);
-                setName(response.data.nickname);
+                queryClient.invalidateQueries({ queryKey: ["me"] });
+                toast({
+                    title: "Изменения успешно сохранены",
+                });
             }
         }
     };
@@ -133,7 +138,14 @@ export function ProfileForm({
                         {isNewEmail && newEmailWarning}
                         {inputEmail}
                     </div>
-                    <Button type="submit" full>
+                    <Button
+                        disabled={
+                            isLoading ||
+                            (email == emailForm && name == nameForm)
+                        }
+                        type="submit"
+                        full
+                    >
                         Сохранить изменения
                     </Button>
                 </form>

@@ -7,11 +7,13 @@ import { useAuthStore } from "@/providers/authProvider";
 import RePasswordInput from "./registerRePasswordInput";
 import { useAlertStore } from "@/providers/alertsProvider";
 import registerAPI from "@/api/auth/register";
+import { useToast } from "@/hooks/use-toast";
 
 export default function RegisterForm() {
     const { registerEmail, registerPassword, registerRePassword } =
         useAuthStore((state) => state);
     const { addAlerts } = useAlertStore((state) => state);
+    const { toast } = useToast();
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -30,6 +32,9 @@ export default function RegisterForm() {
             return;
         }
 
+        toast({
+            title: "Вы успешно зарегистрировались! Пожалуйста, подвердите вашу почту",
+        });
         router.replace("/");
     };
 

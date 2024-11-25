@@ -5,6 +5,7 @@ import PasswordInput from "@/components/reset/resetPasswordInput";
 import RePasswordInput from "@/components/reset/resetRePasswordInput";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import { useAlertStore } from "@/providers/alertsProvider";
 import { useAuthStore } from "@/providers/authProvider";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +14,7 @@ export function ResetForm() {
     const { resetPassword, resetRePassword } = useAuthStore((state) => state);
     const { addAlerts } = useAlertStore((state) => state);
     const searchParams = useSearchParams();
+    const { toast } = useToast();
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -32,6 +34,9 @@ export function ResetForm() {
             return;
         }
 
+        toast({
+            title: "Пароль успешно изменен",
+        });
         router.replace("/");
     };
 
