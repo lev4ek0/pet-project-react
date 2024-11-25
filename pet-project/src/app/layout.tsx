@@ -5,33 +5,30 @@ import { AuthStoreProvider } from "@/providers/authProvider";
 import { AlertStoreProvider } from "@/providers/alertsProvider";
 import ErrorAlerts from "@/components/alerts";
 
-
 export const metadata: Metadata = {
-  title: "Адаптация",
-  description: "Браузерная мультиплеерная игра",
+    title: "Адаптация",
+    description: "Браузерная мультиплеерная игра",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <>
-      <html className="h-full bg-white">
-        <body className="h-full">
-          <ReactQueryProvider>
-            <AlertStoreProvider>
-              <AuthStoreProvider>
-
-                <ErrorAlerts />
-                {children}
-
-              </AuthStoreProvider>
-            </AlertStoreProvider>
-          </ReactQueryProvider>
-        </body>
-      </html>
-    </>
-  );
+    return (
+        <>
+            <html className="h-full bg-white">
+                <body className="h-full">
+                    <ReactQueryProvider>
+                        <AlertStoreProvider>
+                            <AuthStoreProvider>
+                                <ErrorAlerts />
+                                {children}
+                            </AuthStoreProvider>
+                        </AlertStoreProvider>
+                    </ReactQueryProvider>
+                </body>
+            </html>
+        </>
+    );
 }

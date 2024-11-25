@@ -1,4 +1,4 @@
-import { createStore } from 'zustand/vanilla';
+import { createStore } from "zustand/vanilla";
 
 export type ProfileState = {
     newEmail?: string;
@@ -11,18 +11,18 @@ export type ProfileActions = {
 
 export type ProfileStore = ProfileState & ProfileActions;
 
-const localStorageKey = 'profile-storage';
+const localStorageKey = "profile-storage";
 const loadStateFromLocalStorage = (): ProfileState => {
     try {
-        if (typeof window === 'undefined') {
-            return {}
+        if (typeof window === "undefined") {
+            return {};
         }
         const serializedState = localStorage.getItem(localStorageKey);
         if (serializedState !== null) {
             return JSON.parse(serializedState);
         }
     } catch (error) {
-        console.error('Could not load state from localStorage', error);
+        console.error("Could not load state from localStorage", error);
     }
     return {};
 };
@@ -32,7 +32,7 @@ const saveStateToLocalStorage = (state: ProfileState) => {
         const serializedState = JSON.stringify(state);
         localStorage.setItem(localStorageKey, serializedState);
     } catch (error) {
-        console.error('Could not save state to localStorage', error);
+        console.error("Could not save state to localStorage", error);
     }
 };
 
@@ -50,7 +50,11 @@ export const createProfileStore = () => {
 
         return {
             ...initialState,
-            setNewEmail: (newEmail) => setStateAndPersist({ newEmail: newEmail, updatedAt: Math.floor(new Date().getTime() / 1000) }),
+            setNewEmail: (newEmail) =>
+                setStateAndPersist({
+                    newEmail: newEmail,
+                    updatedAt: Math.floor(new Date().getTime() / 1000),
+                }),
         };
     });
 

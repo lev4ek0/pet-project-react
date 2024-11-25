@@ -1,8 +1,7 @@
-'use client'
+"use client";
 
 import { ResetForm } from "@/components/reset/resetForm";
 import { Suspense } from "react";
-
 
 export function ResetPageWithSearchParams() {
     return (
@@ -11,7 +10,6 @@ export function ResetPageWithSearchParams() {
         </>
     );
 }
-
 
 export function Reset() {
     return (

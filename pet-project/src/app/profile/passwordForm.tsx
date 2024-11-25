@@ -1,37 +1,40 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { meAPIPatch } from '@/api/profile/me'
-import { useRouter } from 'next/navigation'
-import { useAlertStore } from '@/providers/alertsProvider'
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { meAPIPatch } from "@/api/profile/me";
+import { useRouter } from "next/navigation";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 export function PasswordForm() {
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const router = useRouter();
     const { addAlerts } = useAlertStore((state) => state);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        const { errors } = await meAPIPatch({
-            password: newPassword,
-            re_password: confirmPassword,
-            old_password: currentPassword,
-        }, router)
+        e.preventDefault();
+        const { errors } = await meAPIPatch(
+            {
+                password: newPassword,
+                re_password: confirmPassword,
+                old_password: currentPassword,
+            },
+            router,
+        );
 
-        addAlerts(errors)
+        addAlerts(errors);
 
         if (!errors || errors.length == 0) {
-            setCurrentPassword("")
-            setNewPassword("")
-            setConfirmPassword("")
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
         }
-    }
+    };
 
     return (
         <Card>
@@ -59,7 +62,9 @@ export function PasswordForm() {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="confirm-password">Подтвердить новый пароль</Label>
+                        <Label htmlFor="confirm-password">
+                            Подтвердить новый пароль
+                        </Label>
                         <Input
                             id="confirm-password"
                             type="password"
@@ -67,10 +72,11 @@ export function PasswordForm() {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>
-                    <Button type="submit" full>Изменить пароль</Button>
+                    <Button type="submit" full>
+                        Изменить пароль
+                    </Button>
                 </form>
             </CardContent>
         </Card>
-    )
+    );
 }
-

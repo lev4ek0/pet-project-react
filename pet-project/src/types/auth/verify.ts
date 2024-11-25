@@ -1,9 +1,9 @@
 export interface VerifyAPIRequestBody {
-    token: string
+    token: string;
 }
 
 export interface VerifyAPIResponseBody {
-    access_token: string
-    refresh_token: string
-    token_type: string
+    access_token: string;
+    refresh_token: string;
+    token_type: string;
 }

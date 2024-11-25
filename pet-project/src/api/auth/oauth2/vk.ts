@@ -1,29 +1,42 @@
 import { RequestOptions, apiRequest } from "@/api/base";
 import { privateAPIRequest } from "@/api/privateMiddleware";
-import { VkLinkAPIResponseBody, VkLoginAPIRequestBody, VkLoginAPIResponseBody } from "@/types/auth/oauth2/vk";
+import {
+    VkLinkAPIResponseBody,
+    VkLoginAPIRequestBody,
+    VkLoginAPIResponseBody,
+} from "@/types/auth/oauth2/vk";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export default async function vkLinkAPI(isPrivate: boolean, router: AppRouterInstance | undefined = undefined) {
+export default async function vkLinkAPI(
+    isPrivate: boolean,
+    router: AppRouterInstance | undefined = undefined,
+) {
     const requestOptions: RequestOptions = {
         path: "/auth/oauth2/vk_link",
         method: "GET",
-        headers: { 'Content-Type': 'application/json' }
-    }
+        headers: { "Content-Type": "application/json" },
+    };
 
     if (isPrivate && router) {
-        return await privateAPIRequest<VkLinkAPIResponseBody>(requestOptions, router)
+        return await privateAPIRequest<VkLinkAPIResponseBody>(
+            requestOptions,
+            router,
+        );
     }
-    return await apiRequest<VkLinkAPIResponseBody>(requestOptions)
+    return await apiRequest<VkLinkAPIResponseBody>(requestOptions);
 }
 
 export async function vkUnlinkAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
         path: "/auth/oauth2/remove/vk",
         method: "POST",
-        headers: { 'Content-Type': 'application/json' }
-    }
+        headers: { "Content-Type": "application/json" },
+    };
 
-    return await privateAPIRequest<VkLinkAPIResponseBody>(requestOptions, router)
+    return await privateAPIRequest<VkLinkAPIResponseBody>(
+        requestOptions,
+        router,
+    );
 }
 
 export async function loginVkAPI(body: VkLoginAPIRequestBody) {
@@ -36,8 +49,8 @@ export async function loginVkAPI(body: VkLoginAPIRequestBody) {
     const requestOptions: RequestOptions = {
         path: `/auth/oauth2/vk?${queryParams}`,
         method: "GET",
-        headers: { 'Content-Type': 'application/json' }
-    }
+        headers: { "Content-Type": "application/json" },
+    };
 
-    return await apiRequest<VkLoginAPIResponseBody>(requestOptions)
+    return await apiRequest<VkLoginAPIResponseBody>(requestOptions);
 }

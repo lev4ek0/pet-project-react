@@ -1,73 +1,67 @@
-import { decrypt } from '@/app/lib/session';
-import { JWTPayload } from '@/types/auth/jwt';
-import Cookies from 'js-cookie';
+import { decrypt } from "@/app/lib/session";
+import { JWTPayload } from "@/types/auth/jwt";
+import Cookies from "js-cookie";
 
 function getCookiesStore() {
-    return Cookies
+    return Cookies;
 }
 
-
 function setCookie(name: string, value: string) {
-    const cookiesStore = getCookiesStore()
+    const cookiesStore = getCookiesStore();
 
     cookiesStore.set(name, value, {
         secure: true,
-        sameSite: 'lax',
-        path: '/',
+        sameSite: "lax",
+        path: "/",
     });
 }
 
-
 export function setAccess(token: string) {
-    setCookie('access', token)
+    setCookie("access", token);
 }
 
 export function setRefresh(token: string) {
-    setCookie('refresh', token)
+    setCookie("refresh", token);
 }
 
-
 function deleteCookie(name: string) {
-    const cookiesStore = getCookiesStore()
+    const cookiesStore = getCookiesStore();
 
-    cookiesStore.remove(name)
+    cookiesStore.remove(name);
 }
 
 export function deleteAccess() {
-    deleteCookie("access")
+    deleteCookie("access");
 }
 
 export function deleteRefresh() {
-    deleteCookie("refresh")
+    deleteCookie("refresh");
 }
 
-
 function getCookie(name: string) {
-    const cookiesStore = getCookiesStore()
+    const cookiesStore = getCookiesStore();
 
     return cookiesStore.get(name);
 }
 
-
 export function getAccess() {
-    return getCookie("access")
+    return getCookie("access");
 }
 
 export function getAccessPayload() {
-    const accessToken = getAccess()
-    const payload: JWTPayload | undefined = decrypt(accessToken)
+    const accessToken = getAccess();
+    const payload: JWTPayload | undefined = decrypt(accessToken);
 
-    return payload
+    return payload;
 }
 
 export function getRefresh() {
-    return getCookie("refresh")
-
+    return getCookie("refresh");
 }
 
 export function getRefreshPayload() {
-    const refreshToken = getRefresh()
-    const payload = decrypt(refreshToken)
+    const refreshToken = getRefresh();
+    const payload = decrypt(refreshToken);
 
-    return payload
+    return payload;
 }

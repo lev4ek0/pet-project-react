@@ -1,3 +1,3 @@
 export interface ForgotAPIRequestBody {
-    email: string
+    email: string;
 }

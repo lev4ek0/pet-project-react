@@ -1,15 +1,15 @@
 import { RegisterAPIRequestBody } from "@/types/auth/register";
 import { apiRequest } from "../base";
-import { RequestOptions } from "../base"
+import { RequestOptions } from "../base";
 
 export default async function registerAPI(body: RegisterAPIRequestBody) {
-    const bodyString = JSON.stringify(body)
+    const bodyString = JSON.stringify(body);
 
     const requestOptions: RequestOptions = {
         path: "/auth/register",
         method: "POST",
         body: bodyString,
-        headers: { 'Content-Type': 'application/json' }
-    }
-    return await apiRequest<RegisterAPIRequestBody>(requestOptions)
+        headers: { "Content-Type": "application/json" },
+    };
+    return await apiRequest<RegisterAPIRequestBody>(requestOptions);
 }

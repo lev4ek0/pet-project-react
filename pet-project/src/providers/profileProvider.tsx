@@ -1,41 +1,45 @@
-'use client';
+"use client";
 
-import { type ReactNode, createContext, useRef, useContext } from 'react';
-import { useStore } from 'zustand';
+import { type ReactNode, createContext, useRef, useContext } from "react";
+import { useStore } from "zustand";
 
-import { type ProfileStore, createProfileStore } from '@/stores/profileStore';
+import { type ProfileStore, createProfileStore } from "@/stores/profileStore";
 
 export type ProfileStoreApi = ReturnType<typeof createProfileStore>;
 
 export const ProfileStoreContext = createContext<ProfileStoreApi | undefined>(
-  undefined,
+    undefined,
 );
 
 export interface ProfileStoreProviderProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export const ProfileStoreProvider = ({
-  children,
+    children,
 }: ProfileStoreProviderProps) => {
-  const storeRef = useRef<ProfileStoreApi>();
-  if (!storeRef.current) {
-    storeRef.current = createProfileStore();
-  }
+    const storeRef = useRef<ProfileStoreApi>();
+    if (!storeRef.current) {
+        storeRef.current = createProfileStore();
+    }
 
-  return (
-    <ProfileStoreContext.Provider value={storeRef.current}>
-      {children}
-    </ProfileStoreContext.Provider>
-  );
+    return (
+        <ProfileStoreContext.Provider value={storeRef.current}>
+            {children}
+        </ProfileStoreContext.Provider>
+    );
 };
 
-export const useProfileStore = <T,>(selector: (store: ProfileStore) => T): T => {
-  const profileStoreContext = useContext(ProfileStoreContext);
+export const useProfileStore = <T,>(
+    selector: (store: ProfileStore) => T,
+): T => {
+    const profileStoreContext = useContext(ProfileStoreContext);
 
-  if (!profileStoreContext) {
-    throw new Error(`useProfileStore must be used within ProfileStoreProvider`);
-  }
+    if (!profileStoreContext) {
+        throw new Error(
+            `useProfileStore must be used within ProfileStoreProvider`,
+        );
+    }
 
-  return useStore(profileStoreContext, selector);
+    return useStore(profileStoreContext, selector);
 };

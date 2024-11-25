@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { Suspense, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Login } from './login';
-import { useAlertStore } from '@/providers/alertsProvider';
+import React, { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Login } from "./login";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 function LoginPageWithSearchParams() {
     const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ function LoginPageWithSearchParams() {
         }
 
         addAlerts(errors);
-        router.replace('/login', {
+        router.replace("/login", {
             scroll: false,
         });
     }, [searchParams, addAlerts, router]);

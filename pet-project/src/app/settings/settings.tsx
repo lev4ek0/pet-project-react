@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React from 'react';
+import React from "react";
 
 import {
     Breadcrumb,
@@ -8,10 +8,9 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 
 export function Settings() {
-
     return (
         <>
             <div className="container mx-auto py-5">
@@ -22,7 +21,9 @@ export function Settings() {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/settings">Настройки</BreadcrumbLink>
+                            <BreadcrumbLink href="/settings">
+                                Настройки
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>

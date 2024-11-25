@@ -1,4 +1,4 @@
-import { createStore } from 'zustand/vanilla';
+import { createStore } from "zustand/vanilla";
 
 export type Alert = {
     id: string;
@@ -7,21 +7,21 @@ export type Alert = {
 
 export type AlertState = {
     alerts: Alert[];
-}
+};
 
 export type AlertActions = {
     addAlert: (message: string, timeout?: number) => void;
     addAlerts: (messages: string[], timeout?: number) => void;
     clearAlerts: () => void;
-}
+};
 
 export type AlertStore = AlertState & AlertActions;
 
 export const defaultInitAlertState: AlertState = {
     alerts: [],
-}
+};
 
-const generateUniqueId = () => '_' + Math.random().toString(36).substr(2, 9);
+const generateUniqueId = () => "_" + Math.random().toString(36).substr(2, 9);
 
 export const createAlertStore = (
     initState: AlertState = defaultInitAlertState,
@@ -35,23 +35,28 @@ export const createAlertStore = (
 
             setTimeout(() => {
                 set((state) => ({
-                    alerts: state.alerts.filter((alert) => alert.id !== id)
+                    alerts: state.alerts.filter((alert) => alert.id !== id),
                 }));
             }, timeout);
         },
-        
+
         addAlerts: (messages, timeout = 5000) => {
-            const newAlerts = messages.map((message) => ({ id: generateUniqueId(), message }));
+            const newAlerts = messages.map((message) => ({
+                id: generateUniqueId(),
+                message,
+            }));
             set((state) => ({ alerts: [...state.alerts, ...newAlerts] }));
 
             setTimeout(() => {
-                const ids = newAlerts.map(alert => alert.id);
+                const ids = newAlerts.map((alert) => alert.id);
                 set((state) => ({
-                    alerts: state.alerts.filter((alert) => !ids.includes(alert.id))
+                    alerts: state.alerts.filter(
+                        (alert) => !ids.includes(alert.id),
+                    ),
                 }));
             }, timeout);
         },
 
         clearAlerts: () => set(() => ({ alerts: [] })),
     }));
-}
+};
