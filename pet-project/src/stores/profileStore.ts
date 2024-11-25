@@ -2,6 +2,7 @@ import { createStore } from 'zustand/vanilla';
 
 export type ProfileState = {
     newEmail?: string;
+    updatedAt?: number;
 };
 
 export type ProfileActions = {
@@ -49,7 +50,7 @@ export const createProfileStore = () => {
 
         return {
             ...initialState,
-            setNewEmail: (newEmail) => setStateAndPersist({ newEmail: newEmail }),
+            setNewEmail: (newEmail) => setStateAndPersist({ newEmail: newEmail, updatedAt: Math.floor(new Date().getTime() / 1000) }),
         };
     });
 
