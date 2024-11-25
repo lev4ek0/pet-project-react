@@ -12,7 +12,6 @@ export default function EmailInput() {
                 id="email"
                 onChange={(e) => setForgotEmail(e.target.value)}
                 value={forgotEmail}
-                type="email"
                 placeholder="Почта"
                 required
             />

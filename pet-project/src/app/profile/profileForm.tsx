@@ -14,6 +14,7 @@ import { useProfileStore } from "@/providers/profileProvider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 interface ProfileFormProps {
     isLoading: boolean;
@@ -31,6 +32,7 @@ export function ProfileForm({
     email,
     avatar,
 }: ProfileFormProps) {
+    const { addAlerts } = useAlertStore((state) => state);
     const [nameForm, setName] = useState("");
     const [emailForm, setEmail] = useState("");
     const [isNewEmail, setIsNewEmail] = useState(false);
@@ -76,7 +78,6 @@ export function ProfileForm({
     ) : (
         <Input
             id="email"
-            type="email"
             value={emailForm}
             onChange={(e) => setEmail(e.target.value)}
         />
@@ -106,6 +107,8 @@ export function ProfileForm({
 
         if (Object.keys(updatedFields).length > 0) {
             const response = await meAPIPatch(updatedFields, router);
+            addAlerts(response.errors);
+
             if (response.data && updatedFields.email) {
                 setNewEmail(updatedFields.email);
             }

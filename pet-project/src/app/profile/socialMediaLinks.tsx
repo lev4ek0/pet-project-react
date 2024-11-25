@@ -1,25 +1,25 @@
 import googleLinkAPI, { googleUnlinkAPI } from "@/api/auth/oauth2/google";
 import vkLinkAPI, { vkUnlinkAPI } from "@/api/auth/oauth2/vk";
-import meAPI from "@/api/profile/me";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OauthAccount } from "@/types/profile/me";
 import { faGoogle, faVk } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
-export function SocialMediaLinks() {
+interface SocialMediaLinksProps {
+    isLoading: boolean;
+    oauthAccounts: OauthAccount[];
+}
+
+export function SocialMediaLinks({
+    isLoading,
+    oauthAccounts,
+}: SocialMediaLinksProps) {
     const router = useRouter();
-    const [oauthAccounts, setOauthAccounts] = useState<OauthAccount[]>([]);
     const queryClient = useQueryClient();
-
-    const me = useQuery({
-        queryKey: ["me"],
-        queryFn: async () => meAPI(router),
-    });
 
     const isAccountLinked = (name: string) => {
         return oauthAccounts.some((account) => account.oauth_name === name);
@@ -93,12 +93,6 @@ export function SocialMediaLinks() {
         );
     };
 
-    useEffect(() => {
-        if (me.data && me.status === "success") {
-            setOauthAccounts(me.data?.data?.oauth_accounts || []);
-        }
-    }, [me.data, me.status]);
-
     return (
         <Card>
             <CardHeader>
@@ -111,7 +105,7 @@ export function SocialMediaLinks() {
                             className="h-9 w-9"
                             icon={network === "vk" ? faVk : faGoogle}
                         />
-                        {me.status === "pending"
+                        {isLoading
                             ? socialAccountSkeleton()
                             : socialAccount(network)}
                     </div>

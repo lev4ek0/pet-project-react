@@ -13,13 +13,21 @@ import { SocialMediaLinks } from "./socialMediaLinks";
 import { useQuery } from "@tanstack/react-query";
 import meAPI from "@/api/profile/me";
 import { useRouter } from "next/navigation";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 export function Profile() {
-    const me = useQuery({
+    const { addAlerts } = useAlertStore((state) => state);
+
+    const router = useRouter();
+
+    const { isLoading, data } = useQuery({
         queryKey: ["me"],
         queryFn: async () => meAPI(router),
     });
-    const router = useRouter();
+
+    if (!isLoading && !data?.isOk) {
+        addAlerts(data?.errors || []);
+    }
 
     return (
         <>
@@ -43,12 +51,15 @@ export function Profile() {
                 </h1>
                 <div className="space-y-6">
                     <ProfileForm
-                        isLoading={me.isLoading}
-                        name={me.data?.data?.nickname}
-                        email={me.data?.data?.email}
-                        avatar={me.data?.data?.avatar_url}
+                        isLoading={isLoading}
+                        name={data?.data?.nickname}
+                        email={data?.data?.email}
+                        avatar={data?.data?.avatar_url}
                     />
-                    <SocialMediaLinks />
+                    <SocialMediaLinks
+                        isLoading={isLoading}
+                        oauthAccounts={data?.data?.oauth_accounts || []}
+                    />
                     <PasswordForm />
                 </div>
             </div>

@@ -12,7 +12,6 @@ export default function EmailInput() {
                 id="email"
                 onChange={(e) => setRegisterEmail(e.target.value)}
                 value={registerEmail}
-                type="email"
                 placeholder="Почта"
                 required
             />
