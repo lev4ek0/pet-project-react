@@ -1,7 +1,4 @@
-import {
-    VerifyAPIRequestBody,
-    VerifyAPIResponseBody,
-} from "@/types/auth/verify";
+import { VerifyAPIRequestBody, VerifyAPIResponseBody } from "@/types/verify";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 

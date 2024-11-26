@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { meAPIPatch } from "@/api/profile/me";
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/providers/alertsProvider";
 import { useToast } from "@/hooks/use-toast";
+import { ConfirmPassword } from "../passwords/confirm";
+import { NewPassword } from "../passwords/new";
+import { CurrentPassword } from "../passwords/current";
 
 export function PasswordForm() {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -17,6 +18,7 @@ export function PasswordForm() {
     const router = useRouter();
     const { addAlerts } = useAlertStore((state) => state);
     const { toast } = useToast();
+    const [isShowPassword, setIsShowPassword] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,35 +50,24 @@ export function PasswordForm() {
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="current-password">Текущий пароль</Label>
-                        <Input
-                            id="current-password"
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="new-password">Новый пароль</Label>
-                        <Input
-                            id="new-password"
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="confirm-password">
-                            Подтвердить новый пароль
-                        </Label>
-                        <Input
-                            id="confirm-password"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                    </div>
+                    <CurrentPassword
+                        currentPassword={currentPassword}
+                        setCurrentPassword={setCurrentPassword}
+                        isShowPassword={isShowPassword}
+                        setIsShowPassword={setIsShowPassword}
+                    />
+                    <NewPassword
+                        newPassword={newPassword}
+                        setNewPassword={setNewPassword}
+                        isShowPassword={isShowPassword}
+                        setIsShowPassword={setIsShowPassword}
+                    />
+                    <ConfirmPassword
+                        confirmPassword={confirmPassword}
+                        setConfirmPassword={setConfirmPassword}
+                        isShowPassword={isShowPassword}
+                        setIsShowPassword={setIsShowPassword}
+                    />
                     <Button
                         disabled={
                             !currentPassword || !newPassword || !confirmPassword

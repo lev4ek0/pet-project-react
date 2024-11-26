@@ -1,18 +1,25 @@
 import { decrypt } from "@/app/lib/session";
-import { JWTPayload } from "@/types/auth/jwt";
+import { JWTPayload } from "@/types/jwt";
 import Cookies from "js-cookie";
 
-function getCookiesStore() {
-    return Cookies;
-}
+export function setCookie(
+    name: string,
+    value: string,
+    expirationM: number | undefined = undefined,
+) {
+    const cookiesStore = Cookies;
+    let expirationDate;
 
-function setCookie(name: string, value: string) {
-    const cookiesStore = getCookiesStore();
+    if (expirationM) {
+        expirationDate = new Date();
+        expirationDate.setMinutes(expirationDate.getMinutes() + expirationM);
+    }
 
     cookiesStore.set(name, value, {
         secure: true,
         sameSite: "lax",
         path: "/",
+        expires: expirationDate,
     });
 }
 
@@ -24,8 +31,8 @@ export function setRefresh(token: string) {
     setCookie("refresh", token);
 }
 
-function deleteCookie(name: string) {
-    const cookiesStore = getCookiesStore();
+export function deleteCookie(name: string) {
+    const cookiesStore = Cookies;
 
     cookiesStore.remove(name);
 }
@@ -39,7 +46,7 @@ export function deleteRefresh() {
 }
 
 function getCookie(name: string) {
-    const cookiesStore = getCookiesStore();
+    const cookiesStore = Cookies;
 
     return cookiesStore.get(name);
 }

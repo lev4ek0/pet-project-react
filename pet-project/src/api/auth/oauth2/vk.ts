@@ -4,7 +4,7 @@ import {
     VkLinkAPIResponseBody,
     VkLoginAPIRequestBody,
     VkLoginAPIResponseBody,
-} from "@/types/auth/oauth2/vk";
+} from "@/types/oauth2/vk";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default async function vkLinkAPI(

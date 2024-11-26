@@ -1,6 +1,6 @@
 "use client";
 
-import { ForgotForm } from "@/components/forgot/forgotForm";
+import { ForgotForm } from "./components/forgotForm";
 
 export function Forgot() {
     return (

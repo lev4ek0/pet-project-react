@@ -1,4 +1,4 @@
-import { LoginAPIResponseBody } from "@/types/auth/login";
+import { LoginAPIResponseBody } from "@/app/login/types/login";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 

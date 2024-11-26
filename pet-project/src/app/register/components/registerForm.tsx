@@ -8,6 +8,7 @@ import RePasswordInput from "./registerRePasswordInput";
 import { useAlertStore } from "@/providers/alertsProvider";
 import registerAPI from "@/api/auth/register";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export default function RegisterForm() {
     const { registerEmail, registerPassword, registerRePassword } =
@@ -15,6 +16,7 @@ export default function RegisterForm() {
     const { addAlerts } = useAlertStore((state) => state);
     const { toast } = useToast();
     const router = useRouter();
+    const [isShowPassword, setIsShowPassword] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -58,8 +60,14 @@ export default function RegisterForm() {
                         className="space-y-6"
                     >
                         <EmailInput />
-                        <PasswordInput />
-                        <RePasswordInput />
+                        <PasswordInput
+                            isShowPassword={isShowPassword}
+                            setIsShowPassword={setIsShowPassword}
+                        />
+                        <RePasswordInput
+                            isShowPassword={isShowPassword}
+                            setIsShowPassword={setIsShowPassword}
+                        />
                         <Button full>Зарегистрироваться</Button>
                         <Button
                             type="button"

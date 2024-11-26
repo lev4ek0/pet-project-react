@@ -1,6 +1,6 @@
 "use client";
 
-import LoginForm from "@/components/login/loginForm";
+import LoginForm from "./components/loginForm";
 
 export function Login() {
     return (

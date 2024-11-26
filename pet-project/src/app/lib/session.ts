@@ -1,4 +1,4 @@
-import { JWTPayload } from "@/types/auth/jwt";
+import { JWTPayload } from "@/types/jwt";
 import { jwtDecode } from "jwt-decode";
 
 export function decrypt(session: string | undefined = "") {

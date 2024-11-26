@@ -1,6 +1,6 @@
 "use client";
 
-import { ResetForm } from "@/components/reset/resetForm";
+import { ResetForm } from "@/app/auth/reset/components/resetForm";
 import { Suspense } from "react";
 
 export function ResetPageWithSearchParams() {

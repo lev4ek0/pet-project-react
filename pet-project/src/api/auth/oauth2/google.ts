@@ -4,7 +4,7 @@ import {
     GoogleLinkAPIResponseBody,
     GoogleLoginAPIRequestBody,
     GoogleLoginAPIResponseBody,
-} from "@/types/auth/oauth2/google";
+} from "@/types/oauth2/google";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default async function googleLinkAPI(

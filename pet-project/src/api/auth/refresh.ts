@@ -1,7 +1,4 @@
-import {
-    RefreshAPIRequestBody,
-    RefreshAPIResponseBody,
-} from "@/types/auth/refresh";
+import { RefreshAPIRequestBody, RefreshAPIResponseBody } from "@/types/refresh";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 

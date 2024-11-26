@@ -1,14 +1,15 @@
 "use client";
 
 import resetAPI from "@/api/auth/reset";
-import PasswordInput from "@/components/reset/resetPasswordInput";
-import RePasswordInput from "@/components/reset/resetRePasswordInput";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAlertStore } from "@/providers/alertsProvider";
 import { useAuthStore } from "@/providers/authProvider";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import PasswordInput from "./resetPasswordInput";
+import RePasswordInput from "./resetRePasswordInput";
 
 export function ResetForm() {
     const { resetPassword, resetRePassword } = useAuthStore((state) => state);
@@ -16,6 +17,7 @@ export function ResetForm() {
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const router = useRouter();
+    const [isShowPassword, setIsShowPassword] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -55,8 +57,14 @@ export function ResetForm() {
                         method="POST"
                         className="space-y-6"
                     >
-                        <PasswordInput />
-                        <RePasswordInput />
+                        <PasswordInput
+                            isShowPassword={isShowPassword}
+                            setIsShowPassword={setIsShowPassword}
+                        />
+                        <RePasswordInput
+                            isShowPassword={isShowPassword}
+                            setIsShowPassword={setIsShowPassword}
+                        />
                         <Button full>Сменить пароль</Button>
                     </form>
                 </div>

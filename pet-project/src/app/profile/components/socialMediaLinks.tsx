@@ -3,7 +3,7 @@ import vkLinkAPI, { vkUnlinkAPI } from "@/api/auth/oauth2/vk";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { OauthAccount } from "@/types/profile/me";
+import { OauthAccount } from "@/app/profile/types/me";
 import { faGoogle, faVk } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
@@ -49,7 +49,7 @@ export function SocialMediaLinks({
         }
 
         if (isOk) {
-            queryClient.invalidateQueries({ queryKey: ["me"] });
+            await queryClient.invalidateQueries({ queryKey: ["me"] });
         }
     }
 

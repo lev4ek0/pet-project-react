@@ -17,6 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import joinRoomAPI from "@/api/room/join";
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/providers/alertsProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function RoomSettingsDialog() {
     const router = useRouter();
@@ -24,6 +25,7 @@ export function RoomSettingsDialog() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [gameMode, setGameMode] = useState("rating");
     const { addAlerts } = useAlertStore((state) => state);
+    const queryClient = useQueryClient();
 
     const handleIncrement = () => {
         if (playersCount < 4) {
@@ -54,6 +56,7 @@ export function RoomSettingsDialog() {
             return;
         }
 
+        await queryClient.invalidateQueries({ queryKey: ["room"] });
         router.push("/room");
     };
 

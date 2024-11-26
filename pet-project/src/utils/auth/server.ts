@@ -1,13 +1,9 @@
 import { cookies } from "next/headers";
-import { JWTPayload } from "@/types/auth/jwt";
+import { JWTPayload } from "@/types/jwt";
 import { decrypt } from "@/app/lib/session";
 
-async function getCookiesStore() {
-    return cookies();
-}
-
-async function getCookie(name: string) {
-    const cookiesStore = await getCookiesStore();
+export async function getCookie(name: string) {
+    const cookiesStore = await cookies();
 
     return cookiesStore.get(name);
 }
@@ -34,13 +30,24 @@ export async function getRefreshPayload() {
     return payload;
 }
 
-async function setCookie(name: string, value: string) {
-    const cookiesStore = await getCookiesStore();
+export async function setCookie(
+    name: string,
+    value: string,
+    expirationM: number | undefined = undefined,
+) {
+    const cookiesStore = await cookies();
+    let expirationDate;
+
+    if (expirationM) {
+        expirationDate = new Date();
+        expirationDate.setMinutes(expirationDate.getMinutes() + 1);
+    }
 
     cookiesStore.set(name, value, {
         secure: true,
         sameSite: "lax",
         path: "/",
+        expires: expirationDate,
     });
 }
 
@@ -53,7 +60,7 @@ export async function setRefresh(token: string) {
 }
 
 async function deleteCookie(name: string) {
-    const cookiesStore = await getCookiesStore();
+    const cookiesStore = await cookies();
 
     cookiesStore.delete(name);
 }

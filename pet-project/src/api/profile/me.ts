@@ -1,4 +1,4 @@
-import { MeAPIRequestBody, MeAPIResponseBody } from "@/types/profile/me";
+import { MeAPIRequestBody, MeAPIResponseBody } from "@/app/profile/types/me";
 import { RequestOptions } from "../base";
 import { privateAPIRequest } from "../privateMiddleware";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";

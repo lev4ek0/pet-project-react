@@ -9,7 +9,7 @@ import { meAPIPatch } from "@/api/profile/me";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { MeAPIRequestBody } from "@/types/profile/me";
+import { MeAPIRequestBody } from "@/app/profile/types/me";
 import { useProfileStore } from "@/providers/profileProvider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
@@ -113,7 +113,7 @@ export function ProfileForm({
                 setNewEmail(updatedFields.email);
             }
             if (response.data) {
-                queryClient.invalidateQueries({ queryKey: ["me"] });
+                await queryClient.invalidateQueries({ queryKey: ["me"] });
                 toast({
                     title: "Изменения успешно сохранены",
                 });

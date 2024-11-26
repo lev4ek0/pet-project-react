@@ -16,7 +16,7 @@ import { deleteAccess, deleteRefresh } from "@/utils/auth/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import ApiResponse from "@/api/base";
-import { MeAPIResponseBody } from "@/types/profile/me";
+import { MeAPIResponseBody } from "@/app/profile/types/me";
 
 export function ProfileDropdown({
     data,

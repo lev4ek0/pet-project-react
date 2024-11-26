@@ -1,4 +1,4 @@
-import { ForgotAPIRequestBody } from "@/types/auth/forgot";
+import { ForgotAPIRequestBody } from "@/app/auth/forgot/types/forgot";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 

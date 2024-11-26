@@ -1,6 +1,6 @@
 "use client";
 
-import RegisterForm from "@/components/register/registerForm";
+import RegisterForm from "./components/registerForm";
 
 export function Register() {
     return (

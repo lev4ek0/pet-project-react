@@ -1,4 +1,4 @@
-import { ResetAPIRequestBody } from "@/types/auth/reset";
+import { ResetAPIRequestBody } from "@/app/auth/reset/types/reset";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 

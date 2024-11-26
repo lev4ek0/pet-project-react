@@ -1,7 +1,6 @@
 "use client";
 
-import { PasswordForm } from "./passwordForm";
-import { ProfileForm } from "./profileForm";
+import { PasswordForm } from "./components/passwordForm";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,11 +8,12 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { SocialMediaLinks } from "./socialMediaLinks";
 import { useQuery } from "@tanstack/react-query";
 import meAPI from "@/api/profile/me";
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/providers/alertsProvider";
+import { ProfileForm } from "./components/profileForm";
+import { SocialMediaLinks } from "./components/socialMediaLinks";
 
 export function Profile() {
     const { addAlerts } = useAlertStore((state) => state);

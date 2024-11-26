@@ -1,4 +1,4 @@
-import { RegisterAPIRequestBody } from "@/types/auth/register";
+import { RegisterAPIRequestBody } from "@/app/register/types/register";
 import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 
