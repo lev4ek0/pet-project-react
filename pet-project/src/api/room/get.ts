@@ -1,7 +1,7 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { RequestOptions } from "../base";
 import { privateAPIRequest } from "../privateMiddleware";
-import { JoinRoomAPIResponseBody } from "./types/join";
+import { GetRoomAPIResponseBody } from "./types/get";
 
 export default async function getRoomAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
@@ -9,7 +9,7 @@ export default async function getRoomAPI(router: AppRouterInstance) {
         method: "GET",
         headers: { "Content-Type": "application/json" },
     };
-    return await privateAPIRequest<JoinRoomAPIResponseBody>(
+    return await privateAPIRequest<GetRoomAPIResponseBody>(
         requestOptions,
         router,
     );

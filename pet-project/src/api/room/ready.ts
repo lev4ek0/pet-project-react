@@ -1,19 +1,12 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { RequestOptions } from "../base";
 import { privateAPIRequest } from "../privateMiddleware";
-import { JoinRoomAPIRequestBody } from "./types/join";
 import { GetRoomAPIResponseBody } from "./types/get";
 
-export default async function joinRoomAPI(
-    router: AppRouterInstance,
-    body: JoinRoomAPIRequestBody,
-) {
-    const bodyString = JSON.stringify(body);
-
+export default async function readyRoomAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/game/room/join",
+        path: "/game/room/ready",
         method: "POST",
-        body: bodyString,
         headers: { "Content-Type": "application/json" },
     };
     return await privateAPIRequest<GetRoomAPIResponseBody>(

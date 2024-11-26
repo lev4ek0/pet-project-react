@@ -22,6 +22,9 @@ export default function Home() {
             if (isOk && data?.status !== "game") {
                 router.push("/room");
             }
+            if (isOk && data?.status === "game") {
+                router.push("/game/" + data.id);
+            }
         };
 
         checkDataAndRedirect();

@@ -22,12 +22,21 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
+    AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getSocketUrl } from "@/socket";
+import { getAccess } from "@/utils/auth/client";
+import readyRoomAPI from "@/api/room/ready";
+
+interface JsonMessage {
+    type: string;
+}
 
 export default function Room() {
     const router = useRouter();
     const { addAlerts } = useAlertStore((state) => state);
+    const [readyGame, setReadyGame] = useState(false);
 
     const { data, isSuccess } = useQuery({
         queryKey: ["room"],
@@ -42,8 +51,31 @@ export default function Room() {
         if (isSuccess && !data.isOk) {
             router.replace("/");
         }
+
         if (isSuccess && data.data?.status === "game") {
             router.replace("/game");
+        }
+
+        if (isSuccess && data.data?.status === "ready") {
+            setReadyGame(true);
+        }
+
+        if (isSuccess && data.data?.id) {
+            const accessToken = getAccess();
+            const socketUrl = getSocketUrl(accessToken || "", data?.data?.id);
+            const wssWebSocket = new WebSocket(socketUrl);
+            wssWebSocket.addEventListener("message", (event) => {
+                const jsonMessage = JSON.parse(event.data);
+                const message = jsonMessage as JsonMessage;
+
+                if (message.type === "ready") {
+                    setReadyGame(true);
+                }
+
+                if (message.type === "start") {
+                    router.replace("/game/" + data.data?.id);
+                }
+            });
         }
     }, [isSuccess, data, router]);
 
@@ -54,6 +86,14 @@ export default function Room() {
         } else {
             addAlerts(errors);
         }
+    }
+
+    async function readyAction() {
+        const { errors, isOk } = await readyRoomAPI(router);
+        if (isOk) {
+            setReadyGame(false);
+        }
+        addAlerts(errors);
     }
 
     return (
@@ -86,6 +126,22 @@ export default function Room() {
                 {response?.mode}
                 <br />
             </div>
+            <AlertDialog open={readyGame}>
+                <AlertDialogContent>
+                    <AlertDialogHeader className="items-center">
+                        <AlertDialogTitle>Вы готовы?</AlertDialogTitle>
+                        <AlertDialogDescription />
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction
+                            onClick={readyAction}
+                            className="min-w-40"
+                        >
+                            ДА
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button type="button" variant="destructive">
@@ -95,6 +151,7 @@ export default function Room() {
                 <AlertDialogContent>
                     <AlertDialogHeader className="items-center">
                         <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+                        <AlertDialogDescription />
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel
