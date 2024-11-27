@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ReactQueryProvider } from "./providers";
+import { ReactQueryProvider } from "@/providers/reactQueryProvider";
 import { AuthStoreProvider } from "@/providers/authProvider";
 import { AlertStoreProvider } from "@/providers/alertsProvider";
 import ErrorAlerts from "@/components/alerts";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
     title: "Адаптация",
@@ -17,10 +18,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <>
-            <html className="h-full bg-white">
-                <body className="h-full">
-                    <ReactQueryProvider>
+        <html className="h-full" suppressHydrationWarning>
+            <body className="h-full">
+                <ReactQueryProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="light"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
                         <AlertStoreProvider>
                             <AuthStoreProvider>
                                 <ErrorAlerts />
@@ -28,9 +34,9 @@ export default function RootLayout({
                                 {children}
                             </AuthStoreProvider>
                         </AlertStoreProvider>
-                    </ReactQueryProvider>
-                </body>
-            </html>
-        </>
+                    </ThemeProvider>
+                </ReactQueryProvider>
+            </body>
+        </html>
     );
 }

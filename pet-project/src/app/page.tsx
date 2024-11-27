@@ -7,6 +7,7 @@ import { ProfileDropdown } from "./main/components/profileDropdown";
 import { RoomSettingsDialog } from "./main/components/roomSettingsDialog";
 import getRoomAPI from "@/api/room/get";
 import { useEffect } from "react";
+import getGameProfileAPI from "@/api/game/profile";
 
 export default function Home() {
     const router = useRouter();
@@ -14,6 +15,11 @@ export default function Home() {
     const { data: meData, isSuccess: meIsSuccess } = useQuery({
         queryKey: ["me"],
         queryFn: async () => meAPI(router),
+    });
+
+    const { data: profileData } = useQuery({
+        queryKey: ["profile"],
+        queryFn: async () => getGameProfileAPI(router),
     });
 
     useEffect(() => {
@@ -31,9 +37,13 @@ export default function Home() {
     }, [router]);
 
     return (
-        <div className="relative h-screen bg-gray-100">
+        <div className="relative h-screen">
             <div className="absolute top-8 right-8">
-                <ProfileDropdown data={meData} isSuccess={meIsSuccess} />
+                <ProfileDropdown
+                    data={meData}
+                    isSuccess={meIsSuccess}
+                    dataProfile={profileData}
+                />
             </div>
 
             <div className="absolute bottom-8 right-8">

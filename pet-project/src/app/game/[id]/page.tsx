@@ -28,25 +28,23 @@ export default function Game({ params }: { params: Promise<{ id: string }> }) {
     const [gameData, setGameData] =
         React.useState<GetGameAPIResponseBody | null>(null);
 
-    const fetchGameData = async () => {
-        const result = await getGameAPI(router, roomId);
-        if (result.isOk) {
-            setGameData(result.data);
-        } else {
-            addAlerts(result.errors);
-            router.replace("/");
-        }
-    };
-
     React.useEffect(() => {
-        fetchGameData();
+        const fetchGameData = async () => {
+            const result = await getGameAPI(router, roomId);
+            if (result.isOk) {
+                setGameData(result.data);
+            } else {
+                addAlerts(result.errors);
+                router.replace("/");
+            }
+        };
 
         const intervalId = setInterval(() => {
             fetchGameData();
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [router, roomId, fetchGameData]);
+    }, [router, roomId, addAlerts]);
 
     async function exitGame() {
         const { isOk, errors } = await leaveRoomAPI(router);
