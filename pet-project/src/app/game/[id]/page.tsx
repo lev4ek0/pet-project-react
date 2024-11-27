@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import leaveRoomAPI from "@/api/room/leave";
 import { GetGameAPIResponseBody } from "@/api/game/types/get";
+import { GameDisplay } from "./components/gameDisplay";
 
 export default function Game({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -28,25 +29,25 @@ export default function Game({ params }: { params: Promise<{ id: string }> }) {
     const [gameData, setGameData] =
         React.useState<GetGameAPIResponseBody | null>(null);
 
-    const fetchGameData = async () => {
-        const result = await getGameAPI(router, roomId);
-        if (result.isOk) {
-            setGameData(result.data);
-        } else {
-            addAlerts(result.errors);
-            router.replace("/");
-        }
-    };
-
     React.useEffect(() => {
+        const fetchGameData = async () => {
+            const result = await getGameAPI(router, roomId);
+            if (result.isOk) {
+                setGameData(result.data);
+            } else {
+                addAlerts(result.errors);
+                router.replace("/");
+            }
+        };
+
         fetchGameData();
 
         const intervalId = setInterval(() => {
             fetchGameData();
-        }, 1000);
+        }, 1000000);
 
         return () => clearInterval(intervalId);
-    }, [router, roomId, fetchGameData]);
+    }, [router, roomId, addAlerts]);
 
     async function exitGame() {
         const { isOk, errors } = await leaveRoomAPI(router);
@@ -63,33 +64,38 @@ export default function Game({ params }: { params: Promise<{ id: string }> }) {
 
     return (
         <div>
-            Время на ход: {gameData?.etl}
-            <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button type="button" variant="destructive">
-                        Выйти из игры
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader className="items-center">
-                        <AlertDialogTitle>
-                            Вы уверены что хотите сдаться?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription />
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel
-                            className="min-w-40"
-                            onClick={exitGame}
-                        >
-                            Да
-                        </AlertDialogCancel>
-                        <AlertDialogAction className="min-w-40">
-                            Продолжить игру
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            Время на ход: {gameData.etl}
+            {gameData?.phase === "end" ? (
+                ""
+            ) : (
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button type="button" variant="destructive">
+                            Выйти из игры
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader className="items-center">
+                            <AlertDialogTitle>
+                                Вы уверены что хотите сдаться?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription />
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel
+                                className="min-w-40"
+                                onClick={exitGame}
+                            >
+                                Да
+                            </AlertDialogCancel>
+                            <AlertDialogAction className="min-w-40">
+                                Продолжить игру
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+            <GameDisplay gameData={gameData} />
         </div>
     );
 }

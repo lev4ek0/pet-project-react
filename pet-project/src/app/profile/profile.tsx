@@ -30,39 +30,35 @@ export function Profile() {
     }
 
     return (
-        <>
-            <div className="container mx-auto max-w-screen-sm py-5">
-                <Breadcrumb className="py-5">
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Главная</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/profile">
-                                Профиль
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
+        <div className="container mx-auto max-w-screen-sm py-5">
+            <Breadcrumb className="py-5">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/">Главная</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/profile">Профиль</BreadcrumbLink>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
 
-                <h1 className="text-3xl font-bold mb-6 mx-auto">
-                    Настройки профиля
-                </h1>
-                <div className="space-y-6">
-                    <ProfileForm
-                        isLoading={isLoading}
-                        name={data?.data?.nickname}
-                        email={data?.data?.email}
-                        avatar={data?.data?.avatar_url}
-                    />
-                    <SocialMediaLinks
-                        isLoading={isLoading}
-                        oauthAccounts={data?.data?.oauth_accounts || []}
-                    />
-                    <PasswordForm />
-                </div>
+            <h1 className="text-3xl font-bold mb-6 mx-auto">
+                Настройки профиля
+            </h1>
+            <div className="space-y-6">
+                <ProfileForm
+                    isLoading={isLoading}
+                    name={data?.data?.nickname}
+                    email={data?.data?.email}
+                    avatar={data?.data?.avatar_url}
+                />
+                <SocialMediaLinks
+                    isLoading={isLoading}
+                    oauthAccounts={data?.data?.oauth_accounts || []}
+                />
+                <PasswordForm />
             </div>
-        </>
+        </div>
     );
 }
