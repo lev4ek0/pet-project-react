@@ -71,7 +71,7 @@ export default function RegisterForm() {
                         <Button full>Зарегистрироваться</Button>
                         <Button
                             type="button"
-                            variant="secondary"
+                            variant="outline"
                             full
                             onClick={handleRegisterClick}
                         >

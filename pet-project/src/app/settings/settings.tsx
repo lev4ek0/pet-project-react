@@ -9,6 +9,7 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ModeToggle } from "./components/themeMode";
 
 export function Settings() {
     return (
@@ -27,6 +28,11 @@ export function Settings() {
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
+
+                <div className="py-5 flex gap-4">
+                    Цветовая тема
+                    <ModeToggle />
+                </div>
             </div>
         </>
     );

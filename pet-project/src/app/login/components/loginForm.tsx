@@ -76,7 +76,7 @@ export default function LoginForm() {
                         <Button full>Войти</Button>
                         <Button
                             type="button"
-                            variant="secondary"
+                            variant="outline"
                             full
                             onClick={handleRegisterClick}
                         >

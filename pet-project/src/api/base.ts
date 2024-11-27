@@ -63,6 +63,10 @@ const MAP_ERRORS: Record<string, string> = {
         "В почте не может быть точки перед знаком @",
     "value is not a valid email address: An email address cannot start with a period.":
         "Почта не может начинаться с точки",
+    "String should have at least 3 characters":
+        "Должно быть как минимум 3 символ",
+    "String should have at most 20 characters":
+        "Должно быть не более 20 символов",
 };
 
 export async function apiRequest<T>(

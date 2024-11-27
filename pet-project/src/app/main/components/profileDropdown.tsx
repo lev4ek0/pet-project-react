@@ -13,17 +13,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logoutAPI from "@/api/auth/logout";
 import { deleteAccess, deleteRefresh } from "@/utils/auth/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import ApiResponse from "@/api/base";
 import { MeAPIResponseBody } from "@/app/profile/types/me";
+import { AvatarCard } from "./avatarCard";
+import { GameProfileAPIResponseBody } from "@/api/game/types/profile";
 
 export function ProfileDropdown({
     data,
     isSuccess,
+    dataProfile,
 }: {
     data: ApiResponse<MeAPIResponseBody> | undefined;
     isSuccess: boolean;
+    dataProfile: ApiResponse<GameProfileAPIResponseBody> | undefined;
 }) {
     const router = useRouter();
 
@@ -36,21 +39,23 @@ export function ProfileDropdown({
         router.push("/login", { scroll: false });
     };
 
-    let avatar: JSX.Element = <Skeleton className="h-10 w-10 rounded-full" />;
+    let avatar: JSX.Element = <Skeleton className="h-12 w-40 rounded-xl" />;
 
     if (data && isSuccess) {
         avatar = (
-            <Avatar>
-                <AvatarImage src={data.data?.avatar_url} />
-                <AvatarFallback></AvatarFallback>
-            </Avatar>
+            <AvatarCard
+                avatarUrl={data.data?.avatar_url || ""}
+                nickName={data.data?.nickname || ""}
+                coins={dataProfile?.data?.coins || 0}
+                rating={dataProfile?.data?.rating || 0}
+            />
         );
     }
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>{avatar}</DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
+            <DropdownMenuContent className="w-56 rounded-xl">
                 <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>

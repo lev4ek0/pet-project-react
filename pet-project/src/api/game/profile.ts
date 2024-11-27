@@ -1,21 +1,16 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { RequestOptions } from "../base";
 import { privateAPIRequest } from "../privateMiddleware";
-import { GetGameAPIResponseBody } from "./types/get";
+import { GameProfileAPIResponseBody } from "./types/profile";
 
-export default async function getGameAPI(
-    router: AppRouterInstance,
-    roomId: string,
-) {
+export default async function getGameProfileAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/game/game/" + roomId,
+        path: "/game/profile",
         method: "GET",
         headers: { "Content-Type": "application/json" },
     };
-    const response = await privateAPIRequest<GetGameAPIResponseBody>(
+    return await privateAPIRequest<GameProfileAPIResponseBody>(
         requestOptions,
         router,
     );
-
-    return response;
 }

@@ -62,5 +62,7 @@ export default {
             },
         },
     },
+    safelist: ["mr-[-100px]", "mr-[-70px]"],
+
     plugins: [require("tailwindcss-animate")],
 } satisfies Config;

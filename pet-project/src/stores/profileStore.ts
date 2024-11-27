@@ -1,12 +1,14 @@
 import { createStore } from "zustand/vanilla";
 
 export type ProfileState = {
+    id?: string;
     newEmail?: string;
     updatedAt?: number;
 };
 
 export type ProfileActions = {
     setNewEmail: (newEmail?: string) => void;
+    setId: (id?: string) => void;
 };
 
 export type ProfileStore = ProfileState & ProfileActions;
@@ -50,6 +52,10 @@ export const createProfileStore = () => {
 
         return {
             ...initialState,
+            setId: (id) =>
+                setStateAndPersist({
+                    id: id,
+                }),
             setNewEmail: (newEmail) =>
                 setStateAndPersist({
                     newEmail: newEmail,
