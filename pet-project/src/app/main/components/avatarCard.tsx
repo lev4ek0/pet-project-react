@@ -36,7 +36,6 @@ export function AvatarCard({
                         <Text as="div" size="2" weight="bold">
                             {truncateString(nickName, 16)}
                         </Text>
-
                         <Flex align="center" gap="2">
                             <Image
                                 src="/coin.svg"

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
         return [
             {
                 source: "/static/:path*",
-                destination: "https://lev-4-ek.online/static/:path*", // Proxy to Backend
+                destination: "https://lev4ek.ru/static/:path*", // Proxy to Backend
             },
         ];
     },

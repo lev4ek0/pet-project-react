@@ -9,9 +9,11 @@ import { AnimalComponent } from "./animal";
 export function Animals({
     animals,
     isDragDisabled,
+    isMine,
 }: {
     animals: Animal[];
     isDragDisabled: boolean;
+    isMine: boolean;
 }) {
     const { properties: propertiesStore } = useCardStore((state) => state);
 
@@ -47,15 +49,12 @@ export function Animals({
             }}
         >
             {animals.map((animal) => {
-                // const hasPredator = animal.properties.some(
-                //     (property) =>
-                //         property.id === "00000000-0000-0000-0000-000000000001",
-                // );
                 return (
                     <AnimalComponent
                         key={animal.id}
                         animal={animal}
                         isDragDisabled={isDragDisabled}
+                        isMine={isMine}
                     />
                 );
             })}
