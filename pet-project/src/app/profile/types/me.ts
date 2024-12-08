@@ -5,7 +5,8 @@ export interface OauthAccount {
 
 export interface MeAPIResponseBody {
     email: string;
-    nickname: string;
+    name: string;
+    username: string,
     is_verified: boolean;
     avatar_url: string;
     id: string;
@@ -13,7 +14,8 @@ export interface MeAPIResponseBody {
 }
 
 export interface MeAPIRequestBody {
-    nickname?: string;
+    name?: string;
+    username?: string;
     email?: string;
     password?: string;
     re_password?: string;

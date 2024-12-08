@@ -49,7 +49,8 @@ export function Profile() {
             <div className="space-y-6">
                 <ProfileForm
                     isLoading={isLoading}
-                    name={data?.data?.nickname}
+                    name={data?.data?.name}
+                    username={data?.data?.username}
                     email={data?.data?.email}
                     avatar={data?.data?.avatar_url}
                 />

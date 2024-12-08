@@ -19,6 +19,7 @@ import { useAlertStore } from "@/providers/alertsProvider";
 interface ProfileFormProps {
     isLoading: boolean;
     name?: string;
+    username?: string;
     email?: string;
     avatar?: string;
 }
@@ -29,11 +30,13 @@ const EmailLifetime =
 export function ProfileForm({
     isLoading,
     name,
+    username,
     email,
     avatar,
 }: ProfileFormProps) {
     const { addAlerts } = useAlertStore((state) => state);
     const [nameForm, setName] = useState("");
+    const [usernameForm, setUsername] = useState("");
     const [emailForm, setEmail] = useState("");
     const [isNewEmail, setIsNewEmail] = useState(false);
     const { newEmail, updatedAt, setNewEmail } = useProfileStore(
@@ -67,6 +70,16 @@ export function ProfileForm({
         <Skeleton className="h-9 w-full" />
     ) : (
         <Input
+            id="username"
+            value={usernameForm}
+            onChange={(e) => setUsername(e.target.value)}
+        />
+    );
+
+    const inputName = isLoading ? (
+        <Skeleton className="h-9 w-full" />
+    ) : (
+        <Input
             id="name"
             value={nameForm}
             onChange={(e) => setName(e.target.value)}
@@ -97,13 +110,15 @@ export function ProfileForm({
 
         setEmail(email || "");
         setName(name || "");
-    }, [newEmail, email, name, updatedAt, setNewEmail]);
+        setUsername(username || "");
+    }, [newEmail, email, username, name, updatedAt, setNewEmail]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const updatedFields: MeAPIRequestBody = {};
         if (email != emailForm) updatedFields.email = emailForm;
-        if (name != nameForm) updatedFields.nickname = nameForm;
+        if (name != nameForm) updatedFields.name = nameForm;
+        if (username != usernameForm) updatedFields.username = usernameForm;
 
         if (Object.keys(updatedFields).length > 0) {
             const response = await meAPIPatch(updatedFields, router);
@@ -133,7 +148,11 @@ export function ProfileForm({
                         <Button variant="outline">Изменить аватар</Button>
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="name">Никнейм</Label>
+                        <Label htmlFor="name">Обращение</Label>
+                        {inputName}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="username">Никнейм</Label>
                         {inputUsername}
                     </div>
                     <div className="space-y-2">
@@ -144,7 +163,7 @@ export function ProfileForm({
                     <Button
                         disabled={
                             isLoading ||
-                            (email == emailForm && name == nameForm)
+                            (email == emailForm && name == nameForm && username == usernameForm)
                         }
                         type="submit"
                         full

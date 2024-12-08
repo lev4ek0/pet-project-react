@@ -36,7 +36,7 @@ export default function LoginForm() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("username", loginName);
+        formData.append("email", loginName);
         formData.append("password", loginPassword);
 
         const { errors, data, isOk } = await loginAPI(formData);
@@ -46,8 +46,8 @@ export default function LoginForm() {
             return;
         }
 
-        setAccess(data.access_token);
-        setRefresh(data.refresh_token);
+        setAccess(data.access);
+        setRefresh(data.refresh);
         reset();
         router.replace("/");
     };

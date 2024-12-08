@@ -10,8 +10,8 @@ import { CardStoreProvider } from "@/providers/cardProvider";
 import { ProfileStoreProvider } from "@/providers/profileProvider";
 
 export const metadata: Metadata = {
-    title: "Адаптация",
-    description: "Браузерная мультиплеерная игра",
+    title: "ООО СБЛЕВ",
+    description: "Твой ИИ помощник",
 };
 
 export default function RootLayout({

@@ -17,16 +17,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ApiResponse from "@/api/base";
 import { MeAPIResponseBody } from "@/app/profile/types/me";
 import { AvatarCard } from "./avatarCard";
-import { GameProfileAPIResponseBody } from "@/api/game/types/profile";
 
 export function ProfileDropdown({
     data,
     isSuccess,
-    dataProfile,
 }: {
     data: ApiResponse<MeAPIResponseBody> | undefined;
     isSuccess: boolean;
-    dataProfile: ApiResponse<GameProfileAPIResponseBody> | undefined;
 }) {
     const router = useRouter();
 
@@ -45,9 +42,7 @@ export function ProfileDropdown({
         avatar = (
             <AvatarCard
                 avatarUrl={data.data?.avatar_url || ""}
-                nickName={data.data?.nickname || ""}
-                coins={dataProfile?.data?.coins || 0}
-                rating={dataProfile?.data?.rating || 0}
+                nickName={data.data?.name || ""}
             />
         );
     }

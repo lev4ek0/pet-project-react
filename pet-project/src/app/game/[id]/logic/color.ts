@@ -1,3 +1,5 @@
+import { Animal } from "@/api/game/types/get";
+
 const availableColors = [
     "#f6bd60",
     "#f7ede2",
@@ -10,21 +12,30 @@ const availableColors = [
 ];
 const colorsMap = new Map();
 
-export const getColorForText = (text: string, property_id: string) => {
-    if (
-        colorsMap.has(text) &&
-        property_id === "00000000-0000-0000-0000-000000000004"
-    ) {
-        return colorsMap.get(text);
-    } else if (property_id === "00000000-0000-0000-0000-000000000004") {
-        const unusedColors = availableColors.filter(
-            (color) => ![...colorsMap.values()].includes(color),
-        );
-        const selectedColor = unusedColors[0];
-
-        colorsMap.set(text, selectedColor);
-        return selectedColor;
-    } else {
+export const getColorForText = (
+    text: string,
+    property_id: string,
+    currentAnimal: Animal,
+) => {
+    if (property_id !== "00000000-0000-0000-0000-000000000004") {
         return undefined;
+    }
+
+    const sortedKeyComponents = [text, currentAnimal.id].sort();
+    const key = sortedKeyComponents.join("-");
+
+    if (colorsMap.has(key)) {
+        return colorsMap.get(key);
+    } else {
+        const usedColors = new Set([...colorsMap.values()]);
+        const unusedColors = availableColors.filter(
+            (color) => !usedColors.has(color),
+        );
+        const selectedColor = unusedColors[0] || null;
+
+        if (selectedColor) {
+            colorsMap.set(key, selectedColor);
+        }
+        return selectedColor;
     }
 };
