@@ -71,7 +71,12 @@ export interface MoveOrder {
 
 // State including cards and properties
 type StoreState = {
+    turn_time: number;
+    last_move: string;
+    current_food: number;
+    excludedAnimalId?: string;
     propertyMovingId?: string;
+    cardMovingId?: string;
     phase: string;
     cards_left: number;
     etl: number;
@@ -94,6 +99,8 @@ type StoreActions = {
     // nextMove: (userId: string) => void;
     // changeEtl: (etl: number) => void;
     // fold: (userId: string, isFold: boolean) => void;
+    setExcludedAnimalId: (excludedAnimalId?: string) => void;
+    setCardMovingId: (cardMovingId?: string) => void;
     setPropertyMovingId: (propertyMovingId?: string) => void;
     updateCards: (cards: CardWithName[]) => void;
     updateProperties: (properties: CardPropertyWithName[]) => void;
@@ -110,6 +117,9 @@ const loadStateFromLocalStorage = (): StoreState => {
     try {
         if (typeof window === "undefined")
             return {
+                turn_time: 30,
+                last_move: "",
+                current_food: 0,
                 phase: "evolution",
                 cards_left: 0,
                 etl: 30,
@@ -132,6 +142,9 @@ const loadStateFromLocalStorage = (): StoreState => {
         );
     }
     return {
+        turn_time: 30,
+        last_move: "",
+        current_food: 0,
         phase: "evolution",
         cards_left: 0,
         etl: 30,
@@ -194,6 +207,9 @@ export const createStoreWithCardsAndProperties = () => {
                 }));
 
                 setStateAndPersist({
+                    turn_time: game.turn_time,
+                    last_move: game.last_move,
+                    current_food: game.current_food,
                     etl: game.etl,
                     phase: game.phase,
                     cards_left: game.cards_left,
@@ -212,6 +228,14 @@ export const createStoreWithCardsAndProperties = () => {
             setPropertyMovingId: (propertyMovingId?) =>
                 setStateAndPersist({
                     propertyMovingId,
+                }),
+            setExcludedAnimalId: (excludedAnimalId?) =>
+                setStateAndPersist({
+                    excludedAnimalId,
+                }),
+            setCardMovingId: (cardMovingId?) =>
+                setStateAndPersist({
+                    cardMovingId,
                 }),
             setEtl: (etl) =>
                 setStateAndPersist({

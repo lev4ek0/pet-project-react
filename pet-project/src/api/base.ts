@@ -67,6 +67,7 @@ const MAP_ERRORS: Record<string, string> = {
         "Должно быть как минимум 3 символ",
     "String should have at most 20 characters":
         "Должно быть не более 20 символов",
+    "It's not your move": "Это действие можно произвести только в свой ход",
 };
 
 export async function apiRequest<T>(
@@ -95,7 +96,7 @@ export async function apiRequest<T>(
             responseBody = null;
         }
 
-        if (!response.ok) {
+        if (!response.ok && response.status !== 422) {
             const detail = (responseBody as ApiErrorResponse)?.detail || "";
             const allErrors = [
                 ...((responseBody as ApiErrorResponse)?.errors || []),
@@ -113,6 +114,15 @@ export async function apiRequest<T>(
 
             return {
                 errors,
+                data: null,
+                isOk: false,
+                statusCode: response.status,
+            };
+        }
+
+        if (!response.ok && response.status === 422) {
+            return {
+                errors: ["Что-то сломалось на фронте, попробуйте еще раз"],
                 data: null,
                 isOk: false,
                 statusCode: response.status,

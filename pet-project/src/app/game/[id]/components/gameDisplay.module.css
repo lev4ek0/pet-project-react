@@ -1,3 +1,7 @@
+.selectable_card {
+    background-color: rgba(255, 240, 77, 0.5);
+}
+
 .card_custom_hidden {
     border: 1px solid #ccc;
     border-radius: 8px;
