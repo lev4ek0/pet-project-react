@@ -21,29 +21,58 @@ import { useCardStore } from "@/providers/cardProvider";
 import { foldAPI } from "@/api/game/fold";
 import { ResultsComponent } from "./results";
 import { useProfileStore } from "@/providers/profileProvider";
+import { useAlertStore } from "@/providers/alertsProvider";
 
 export default function GameComponent() {
     const router = useRouter();
-    const { cards_left, etl, phase, results, moveOrder, me, setEtl } =
-        useCardStore((state) => state);
+    const {
+        cards_left,
+        etl,
+        phase,
+        results,
+        moveOrder,
+        me,
+        setEtl,
+        last_move,
+        turn_time,
+    } = useCardStore((state) => state);
     const { id } = useProfileStore((state) => state);
+    const { addAlerts } = useAlertStore((state) => state);
 
     useEffect(() => {
         if (etl === 0) return;
 
         const intervalId = setInterval(() => {
-            setEtl(etl - 1);
-        }, 1000);
+            const dateStringTrimmed = last_move.slice(0, 23);
+            const date = new Date(dateStringTrimmed + "Z");
+            date.setSeconds(date.getSeconds() + turn_time);
+
+            const now = new Date();
+            const diffInMilliseconds = date.getTime() - now.getTime();
+            const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+
+            setEtl(diffInSeconds);
+        }, 100);
 
         return () => clearInterval(intervalId);
-    }, [etl, setEtl]);
+    }, [etl, setEtl, last_move, turn_time]);
+
+    useEffect(() => {
+        if (
+            me.cards.length === 0 &&
+            moveOrder[0].player_id === id &&
+            phase === "evolution"
+        ) {
+            fold();
+        }
+    }, [me, moveOrder, id, phase]);
 
     async function exitGame() {
         const { isOk, errors } = await leaveRoomAPI(router);
         if (isOk) {
             router.push("/");
         } else {
-            console.log(errors);
+            addAlerts(errors);
         }
     }
 
@@ -51,20 +80,12 @@ export default function GameComponent() {
         const { isOk, errors } = await foldAPI(router);
         if (isOk) {
         } else {
-            console.log(errors);
+            addAlerts(errors);
         }
     }
 
     if (phase === "") {
         return <div>Loading...</div>;
-    }
-
-    if (
-        me.cards.length === 0 &&
-        moveOrder[0].player_id === id &&
-        phase === "evolution"
-    ) {
-        fold();
     }
 
     return (
