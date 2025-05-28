@@ -10,6 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import PasswordInput from "./resetPasswordInput";
 import RePasswordInput from "./resetRePasswordInput";
+import { setAccess, setRefresh } from "@/utils/auth/client";
 
 export function ResetForm() {
     const { resetPassword, resetRePassword } = useAuthStore((state) => state);
@@ -29,11 +30,16 @@ export function ResetForm() {
             re_password: resetRePassword,
         };
 
-        const { errors, isOk } = await resetAPI(body);
+        const { errors, data, isOk } = await resetAPI(body);
 
-        if (!isOk) {
-            addAlerts(errors);
+        if (!isOk || !data) {
+            addAlerts(errors.map((error) => error.message));
             return;
+        }
+
+        if (data) {
+            setAccess(data.access_token);
+            setRefresh(data.refresh_token);
         }
 
         toast({

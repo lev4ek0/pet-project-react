@@ -25,7 +25,7 @@ export async function vkHandler(request: NextRequest) {
             const errorParams = errors
                 .map(
                     (error, index) =>
-                        `error${index}=${encodeURIComponent(error)}`,
+                        `error${index}=${encodeURIComponent(error.message)}`,
                 )
                 .join("&");
 
@@ -56,7 +56,7 @@ export async function googleHandler(request: NextRequest) {
             const errorParams = errors
                 .map(
                     (error, index) =>
-                        `error${index}=${encodeURIComponent(error)}`,
+                        `error${index}=${encodeURIComponent(error.message)}`,
                 )
                 .join("&");
 

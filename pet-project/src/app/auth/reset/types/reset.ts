@@ -3,3 +3,8 @@ export interface ResetAPIRequestBody {
     password: string;
     re_password: string;
 }
+
+export interface ResetAPIResponseBody {
+    access_token: string;
+    refresh_token: string;
+}

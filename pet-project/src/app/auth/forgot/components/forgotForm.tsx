@@ -25,7 +25,8 @@ export function ForgotForm() {
         const { errors, isOk } = await forgotAPI(body);
 
         if (!isOk) {
-            addAlerts(errors);
+            console.log(errors);
+            addAlerts(errors.map((error) => error.message));
             return;
         }
 

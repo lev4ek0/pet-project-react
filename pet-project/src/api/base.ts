@@ -8,66 +8,91 @@ export interface RequestOptions {
 }
 
 export default interface ApiResponse<T> {
-    errors: string[];
+    errors: ApiError[];
     data: T | null;
     isOk: boolean;
     statusCode: number;
 }
 
-type Error = {
+type ApiError = {
+    source: string;
     code: string;
     message: string;
 };
 
 type ApiErrorResponse = {
-    errors?: Error[];
-    non_field_errors?: Error[];
-    detail?: string;
+    errors?: ApiError[];
 };
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const MAP_ERRORS: Record<string, string> = {
-    incorrect_email: "Почта неправильного формата",
-    user_bad_username: "Неверное имя пользователя или пароль",
-    user_bad_password: "Неверное имя пользователя или пароль",
-    verify_user_bad_token: "Неправильная ссылка подтверждения пользователя",
-    verify_user_already_verified: "Пользователь уже подтвержден",
-    verify_user_token_expired: "Ссылка подтверждения пользователя устарела",
-    passwords_mismatch: "Пароли не совпадают",
-    same_password: "Введите новый пароль, отличный от старого",
-    weak_password:
-        "Пароль должен быть минимум 8 символов в длину, содержать заглавную и маленькую букву",
-    reset_password_bad_token: "Неправильная ссылка сброса пароля",
-    user_inactive: "Доступ пользователю ограничен",
-    user_not_exist: "Пользователь не существует",
-    user_not_verified: "Аккаунт пользователя не подтвержден",
-    email_belongs_to_another_user: "Почта принадлежит другому пользователю",
-    wrong_input: "Непредвиденная ошибка",
-    register_user_already_exists: "Пользователь с такой почтой уже существует",
-    register_invalid_password:
-        "Пароль должен быть минимум 8 символов в длину, содержать заглавную и маленькую букву",
-    internal_service_unavailable:
-        "Один из внутренних сервисов не отвечает. Пожалуйста, попробуйте позже",
-    oauth_not_available_email:
-        "Укажите почту в стороннем сервисе и попробуйте войти снова",
-    "Player is already in room": "Вы уже в комнате",
-    "value is not a valid email address: The email address is not valid. It must have exactly one @-sign.":
-        "Почта должна содержать ровно один знак @",
-    "value is not a valid email address: There must be something after the @-sign.":
-        "После знака @ должен быть еще текст",
-    "value is not a valid email address: An email address cannot end with a period.":
-        "Почта не может заканчиваться на точку",
-    "value is not a valid email address: There must be something before the @-sign.":
-        "Перед знаком @ должен быть еще текст",
-    "value is not a valid email address: An email address cannot have a period immediately before the @-sign.":
-        "В почте не может быть точки перед знаком @",
-    "value is not a valid email address: An email address cannot start with a period.":
-        "Почта не может начинаться с точки",
-    "String should have at least 3 characters":
-        "Должно быть как минимум 3 символ",
-    "String should have at most 20 characters":
-        "Должно быть не более 20 символов",
-    "It's not your move": "Это действие можно произвести только в свой ход",
+    // Аутентификация и управление пользователями
+    invalid_refresh_token: "Недействительный токен обновления. Пожалуйста, войдите заново",
+    email_exists: "Пользователь с таким email уже существует",
+    token_required: "Необходима авторизация",
+    invalid_or_expired_token: "Недействительный или просроченный токен",
+    user_not_found_or_already_verified: "Пользователь не найден или уже верифицирован",
+    user_not_found: "Пользователь не найден",
+    password_already_changed: "Пароль уже был изменен",
+    invalid_login: "Неверные учетные данные",
+    inactive: "Учетная запись неактивна",
+    password_incorrect: "Неверный пароль",
+    password_mismatch: "Пароли не совпадают",
+    no_active_account: "Учетная запись не найдена или неактивна",
+
+    // Валидация пароля
+    weak_password: "Пароль слишком простой",
+    password_too_short: "Пароль слишком короткий",
+    password_too_similar: "Пароль слишком похож на ваши личные данные",
+    password_too_common: "Пароль слишком распространенный",
+    password_entirely_numeric: "Пароль не может состоять только из цифр",
+
+    // Загрузка файлов
+    avatar_file_required: "Необходимо выбрать файл аватара",
+    failed_to_update_avatar: "Не удалось обновить аватар",
+    invalid_image: "Недопустимый формат изображения",
+
+    // Валидация форм
+    required: "Обязательное поле",
+    invalid: "Недопустимое значение",
+    invalid_choice: "Выбрано недопустимое значение",
+    max_length: "Превышена максимальная длина",
+    empty: "Поле не может быть пустым",
+    contradiction: "Обнаружены противоречивые значения",
+    invalid_list: "Неверный формат списка",
+
+    // Операции с базой данных
+    unique: "Такое значение уже существует у другого пользователя",
+    unique_together: "Такая комбинация значений уже существует у другого пользователя",
+    unique_for_date: "Значение должно быть уникальным для этой даты",
+    null: "Значение не может быть пустым",
+    blank: "Поле не может быть пустым",
+
+    // Специфичные для PostgreSQL
+    not_a_string: "Значение должно быть текстом",
+    item_invalid: "Недопустимый элемент в массиве",
+    nested_array_mismatch: "Неверная структура вложенного массива",
+    missing_keys: "Отсутствуют обязательные поля",
+    extra_keys: "Обнаружены лишние поля",
+    invalid_json: "Неверный формат JSON",
+    invalid_format: "Неверный формат",
+    bound_ordering: "Неверный порядок границ",
+
+    // GIS
+    invalid_geom: "Неверная геометрия",
+    invalid_geom_type: "Неверный тип геометрии",
+    transform_error: "Ошибка преобразования геометрии",
+
+    // Прочее
+    ambiguous_timezone: "Неоднозначный часовой пояс",
+    missing_management_form: "Отсутствует форма управления",
+    too_many_forms: "Слишком много форм",
+    too_few_forms: "Недостаточно форм",
+    overflow: "Превышено допустимое значение",
+    invalid_date: "Неверный формат даты",
+    invalid_datetime: "Неверный формат даты и времени",
+    invalid_time: "Неверный формат времени",
+    unexpected_error: "Непредвиденная ошибка"
 };
 
 export async function apiRequest<T>(
@@ -96,33 +121,28 @@ export async function apiRequest<T>(
             responseBody = null;
         }
 
-        if (!response.ok && response.status !== 422) {
-            const detail = (responseBody as ApiErrorResponse)?.detail || "";
-            const allErrors = [
-                ...((responseBody as ApiErrorResponse)?.errors || []),
-                ...((responseBody as ApiErrorResponse)?.non_field_errors || []),
-            ];
-            if (detail) allErrors.push({ code: detail, message: detail });
-
-            const errors = allErrors.map(
-                (err) =>
-                    MAP_ERRORS[err.code] ||
-                    MAP_ERRORS[err.message] ||
-                    err.message ||
-                    `Код ошибки: ${err.code}`,
-            );
-
+        if (!response.ok) {
+            const apiErrors = (responseBody as ApiErrorResponse)?.errors || [];
+            
+            const mappedErrors = apiErrors.map((err) => ({
+                source: err.source,
+                code: err.code,
+                message: `${MAP_ERRORS[err.code] || err.message || `Код ошибки: ${err.code}`}${err.source !== '__response__' ? ` для поля ${err.source}` : ''}`,
+            }));
+            if (mappedErrors.length > 0) {
+                return {
+                    errors: mappedErrors,
+                    data: null,
+                    isOk: false,
+                    statusCode: response.status,
+                };
+            }
             return {
-                errors,
-                data: null,
-                isOk: false,
-                statusCode: response.status,
-            };
-        }
-
-        if (!response.ok && response.status === 422) {
-            return {
-                errors: ["Что-то сломалось на фронте, попробуйте еще раз"],
+                errors: [{
+                    source: "client",
+                    code: "unexpected_error",
+                    message: "Непредвиденная ошибка"
+                }],
                 data: null,
                 isOk: false,
                 statusCode: response.status,
@@ -138,7 +158,11 @@ export async function apiRequest<T>(
     } catch (error: unknown) {
         if (error instanceof Error) {
             return {
-                errors: [error.message],
+                errors: [{
+                    source: "client",
+                    code: "unexpected_error",
+                    message: error.message
+                }],
                 data: null,
                 isOk: false,
                 statusCode: 500,
@@ -146,7 +170,11 @@ export async function apiRequest<T>(
         }
 
         return {
-            errors: ["Непредвиденная ошибка"],
+            errors: [{
+                source: "client",
+                code: "unexpected_error",
+                message: "Непредвиденная ошибка"
+            }],
             data: null,
             isOk: false,
             statusCode: 500,

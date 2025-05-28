@@ -6,11 +6,10 @@ import { AlertStoreProvider } from "@/providers/alertsProvider";
 import ErrorAlerts from "@/components/alerts";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
-import { CardStoreProvider } from "@/providers/cardProvider";
 import { ProfileStoreProvider } from "@/providers/profileProvider";
 
 export const metadata: Metadata = {
-    title: "ООО СБЛЕВ",
+    title: "Cвибел",
     description: "Твой ИИ помощник",
 };
 
@@ -32,11 +31,9 @@ export default function RootLayout({
                         <AlertStoreProvider>
                             <AuthStoreProvider>
                                 <ProfileStoreProvider>
-                                    <CardStoreProvider>
                                         <ErrorAlerts />
                                         <Toaster />
                                         {children}
-                                    </CardStoreProvider>
                                 </ProfileStoreProvider>
                             </AuthStoreProvider>
                         </AlertStoreProvider>

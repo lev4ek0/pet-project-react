@@ -31,7 +31,7 @@ export function PasswordForm() {
             router,
         );
 
-        addAlerts(errors);
+        addAlerts(errors.map((error) => error.message));
 
         if (!errors || errors.length == 0) {
             setCurrentPassword("");

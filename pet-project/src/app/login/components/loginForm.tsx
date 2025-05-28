@@ -42,7 +42,7 @@ export default function LoginForm() {
         const { errors, data, isOk } = await loginAPI(formData);
 
         if (!isOk || !data) {
-            addAlerts(errors);
+            addAlerts(errors.map((error) => error.message));
             return;
         }
 

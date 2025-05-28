@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { meAPIPatch } from "@/api/profile/me";
+import { meAPIPatch, updateAvatarAPI } from "@/api/profile/me";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
@@ -39,6 +39,7 @@ export function ProfileForm({
     const [usernameForm, setUsername] = useState("");
     const [emailForm, setEmail] = useState("");
     const [isNewEmail, setIsNewEmail] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const { newEmail, updatedAt, setNewEmail } = useProfileStore(
         (state) => state,
     );
@@ -54,6 +55,30 @@ export function ProfileForm({
             </AlertDescription>
         </Alert>
     );
+
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setIsUploadingAvatar(true);
+            const response = await updateAvatarAPI(file, router);
+            if (response.data) {
+                await queryClient.invalidateQueries({ queryKey: ["me"] });
+                toast({
+                    title: "Аватар успешно обновлен",
+                });
+            }
+            addAlerts(response.errors.map((error) => error.message));
+        } catch {
+            toast({
+                title: "Ошибка при обновлении аватара",
+                variant: "destructive",
+            });
+        } finally {
+            setIsUploadingAvatar(false);
+        }
+    };
 
     const inputAvatar = isLoading ? (
         <Skeleton className="h-20 w-20 rounded-full" />
@@ -101,7 +126,7 @@ export function ProfileForm({
             newEmail &&
             (newEmail === email ||
                 (updatedAt || 0) + EmailLifetime <
-                    Math.floor(new Date().getTime() / 1000))
+                Math.floor(new Date().getTime() / 1000))
         ) {
             setNewEmail(undefined);
         } else if (newEmail && newEmail !== email) {
@@ -122,7 +147,7 @@ export function ProfileForm({
 
         if (Object.keys(updatedFields).length > 0) {
             const response = await meAPIPatch(updatedFields, router);
-            addAlerts(response.errors);
+            addAlerts(response.errors.map((error) => error.message));
 
             if (response.data && updatedFields.email) {
                 setNewEmail(updatedFields.email);
@@ -145,7 +170,23 @@ export function ProfileForm({
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="flex items-center space-x-4">
                         {inputAvatar}
-                        <Button variant="outline">Изменить аватар</Button>
+                        <div className="flex items-center">
+                            <Input
+                                type="file"
+                                id="avatar"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleAvatarChange}
+                            />
+                            <Button
+                                variant="outline"
+                                type="button"
+                                disabled={isUploadingAvatar}
+                                onClick={() => document.getElementById("avatar")?.click()}
+                            >
+                                {isUploadingAvatar ? "Загрузка..." : "Изменить аватар"}
+                            </Button>
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="name">Обращение</Label>

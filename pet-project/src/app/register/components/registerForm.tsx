@@ -30,7 +30,7 @@ export default function RegisterForm() {
         const { errors, isOk } = await registerAPI(body);
 
         if (!isOk) {
-            addAlerts(errors);
+            addAlerts(errors.map((error) => error.message));
             return;
         }
 

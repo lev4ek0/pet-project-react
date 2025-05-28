@@ -39,3 +39,18 @@ export async function meAPIPatch(
     };
     return await privateAPIRequest<MeAPIResponseBody>(requestOptions, router);
 }
+
+export async function updateAvatarAPI(
+    file: File,
+    router: AppRouterInstance,
+) {
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const requestOptions: RequestOptions = {
+        path: "/auth/avatar/update/",
+        method: "POST",
+        body: formData,
+    };
+    return await privateAPIRequest<{ avatar_url: string }>(requestOptions, router);
+}

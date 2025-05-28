@@ -26,7 +26,7 @@ export function Profile() {
     });
 
     if (!isLoading && !data?.isOk) {
-        addAlerts(data?.errors || []);
+        addAlerts(data?.errors.map((error) => error.message) || []);
     }
 
     return (
