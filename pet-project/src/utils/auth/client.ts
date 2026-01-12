@@ -14,7 +14,6 @@ export function setCookie(
         expirationDate = new Date();
         expirationDate.setMinutes(expirationDate.getMinutes() + expirationM);
     }
-
     cookiesStore.set(name, value, {
         secure: true,
         sameSite: "lax",

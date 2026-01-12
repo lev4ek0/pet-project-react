@@ -1,4 +1,4 @@
 export interface LoginAPIResponseBody {
-    access: string;
-    refresh: string;
+    access_token: string;
+    refresh_token: string;
 }
