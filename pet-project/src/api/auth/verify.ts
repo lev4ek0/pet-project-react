@@ -3,13 +3,9 @@ import { apiRequest } from "../base";
 import { RequestOptions } from "../base";
 
 export default async function verifyAPI(body: VerifyAPIRequestBody) {
-    const bodyString = JSON.stringify({ token: body.token });
-
     const requestOptions: RequestOptions = {
-        path: "/auth/verify/",
-        method: "POST",
-        body: bodyString,
-        headers: { "Content-Type": "application/json" },
+        path: `/auth/verify?token=${encodeURIComponent(body.token)}`,
+        method: "GET",
     };
     return await apiRequest<VerifyAPIResponseBody>(requestOptions);
 }

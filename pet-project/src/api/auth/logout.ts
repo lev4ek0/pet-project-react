@@ -4,7 +4,7 @@ import { privateAPIRequest } from "../privateMiddleware";
 
 export default async function logoutAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/auth/jwt/logout/",
+        path: "/auth/jwt/logout",
         method: "POST",
     };
     await privateAPIRequest(requestOptions, router);

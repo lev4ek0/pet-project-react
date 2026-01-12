@@ -12,7 +12,7 @@ export default async function vkLinkAPI(
     router: AppRouterInstance | undefined = undefined,
 ) {
     const requestOptions: RequestOptions = {
-        path: "/auth/oauth2/vk_link/",
+        path: "/auth/oauth2/vk_link",
         method: "GET",
         headers: { "Content-Type": "application/json" },
     };
@@ -28,7 +28,7 @@ export default async function vkLinkAPI(
 
 export async function vkUnlinkAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/auth/oauth2/remove/vk/",
+        path: "/auth/oauth2/remove/vk",
         method: "POST",
         headers: { "Content-Type": "application/json" },
     };

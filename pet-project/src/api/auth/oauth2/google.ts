@@ -12,7 +12,7 @@ export default async function googleLinkAPI(
     router: AppRouterInstance | undefined = undefined,
 ) {
     const requestOptions: RequestOptions = {
-        path: "/auth/oauth2/google_link/",
+        path: "/auth/oauth2/google_link",
         method: "GET",
         headers: { "Content-Type": "application/json" },
     };
@@ -28,7 +28,7 @@ export default async function googleLinkAPI(
 
 export async function googleUnlinkAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/auth/oauth2/remove/google/",
+        path: "/auth/oauth2/remove/google",
         method: "POST",
         headers: { "Content-Type": "application/json" },
     };

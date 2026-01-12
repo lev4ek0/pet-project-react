@@ -5,7 +5,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 export default async function meAPI(router: AppRouterInstance) {
     const requestOptions: RequestOptions = {
-        path: "/auth/users/me/",
+        path: "/auth/me",
         method: "GET",
         headers: { "Content-Type": "application/json" },
     };
@@ -32,7 +32,7 @@ export async function meAPIPatch(
     const bodyString = createRequestBody(body);
 
     const requestOptions: RequestOptions = {
-        path: "/auth/users/me/",
+        path: "/auth/me",
         method: "PATCH",
         body: bodyString,
         headers: { "Content-Type": "application/json" },

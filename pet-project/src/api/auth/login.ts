@@ -4,7 +4,7 @@ import { RequestOptions } from "../base";
 
 export default async function loginAPI(body: FormData) {
     const requestOptions: RequestOptions = {
-        path: "/auth/jwt/create",
+        path: "/auth/jwt/login",
         method: "POST",
         body: body,
     };

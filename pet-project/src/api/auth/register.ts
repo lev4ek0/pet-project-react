@@ -6,7 +6,7 @@ export default async function registerAPI(body: RegisterAPIRequestBody) {
     const bodyString = JSON.stringify(body);
 
     const requestOptions: RequestOptions = {
-        path: "/auth/register/",
+        path: "/auth/register",
         method: "POST",
         body: bodyString,
         headers: { "Content-Type": "application/json" },
