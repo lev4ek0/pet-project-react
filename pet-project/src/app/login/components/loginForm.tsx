@@ -7,16 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/providers/authProvider";
 import { useAlertStore } from "@/providers/alertsProvider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle, faVk } from "@fortawesome/free-brands-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faGoogle, faVk } from "@fortawesome/free-brands-svg-icons";
 import { useEffect, useState } from "react";
 import googleLinkAPI from "@/api/auth/oauth2/google";
 import vkLinkAPI from "@/api/auth/oauth2/vk";
+import { TelegramLoginButton } from "./telegramWidget";
+import telegramBotUsernameAPI from "@/api/auth/oauth2/telegram";
 
 export default function LoginForm() {
     const { loginName, loginPassword, reset } = useAuthStore((state) => state);
     const [vkLink, setVkLink] = useState("");
     const [googleLink, setGoogleLink] = useState("");
+    const [telegramBotUsername, setTelegramBotUsername] = useState("");
     const { addAlerts } = useAlertStore((state) => state);
     const router = useRouter();
 
@@ -24,9 +27,11 @@ export default function LoginForm() {
         const fetchData = async () => {
             const googleResponse = await googleLinkAPI(false);
             const vkResponse = await vkLinkAPI(false);
+            const telegramResponse = await telegramBotUsernameAPI(false)
 
             setGoogleLink(googleResponse.data?.url || "");
             setVkLink(vkResponse.data?.url || "");
+            setTelegramBotUsername(telegramResponse.data?.username || "")
         };
 
         fetchData();
@@ -45,7 +50,7 @@ export default function LoginForm() {
             addAlerts(errors);
             return;
         }
-    
+
         setAccess(data.access_token);
         setRefresh(data.refresh_token);
         reset();
@@ -91,28 +96,35 @@ export default function LoginForm() {
                             </span>
                             <div className="flex-grow border-t border-gray-300"></div>
                         </div>
-                        <div className="flex justify-between mt-2">
-                            <Button
-                                type="button"
-                                variant="google"
-                                onClick={() => router.replace(googleLink)}
-                                className="flex-1 mr-1 flex items-center justify-center"
-                            >
-                                <FontAwesomeIcon
-                                    icon={faGoogle}
-                                    className="mr-2"
-                                />{" "}
-                                Google
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="vk"
-                                onClick={() => router.replace(vkLink)}
-                                className="flex-1 ml-1 flex items-center justify-center"
-                            >
-                                <FontAwesomeIcon icon={faVk} className="mr-2" />{" "}
-                                VK
-                            </Button>
+                        <div className="mt-3 space-y-2">
+                            <div className="flex gap-2">
+                                <Button variant="google" className="flex-1" onClick={() => router.replace(googleLink)}>
+                                    Google
+                                </Button>
+                                <Button variant="vk" className="flex-1" onClick={() => router.replace(vkLink)}>
+                                    VK
+                                </Button>
+                            </div>
+
+                            <TelegramLoginButton
+                                botUsername={telegramBotUsername}
+                                onAuth={(user) => {
+                                    // твой бекенд-логин, как в html-шаблоне
+                                    return fetch("/api/auth/telegram/login", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        credentials: "include",
+                                        body: JSON.stringify(user),
+                                    }).then(async (r) => {
+                                        if (!r.ok) throw new Error("TG auth failed");
+                                        // дальше: обновить состояние / редирект / refetch user
+                                    });
+                                }}
+                                radius={12}
+                                size="large"
+                                lang="ru"
+                                requestAccess="write"
+                            />
                         </div>
                     </div>
                 </div>
